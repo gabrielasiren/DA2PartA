@@ -1,0 +1,961 @@
+---
+title: "R_assignment_big"
+author: "25632"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE) # Show/Hide chunks in output
+knitr::opts_chunk$set(message = FALSE) # Show/Hide error messages
+knitr::opts_chunk$set(comment = NA) # Show/Hide comments
+library(readxl) # For loading Excel files
+library(kableExtra) # For table formatting
+library(ggplot2) # For graphs
+library(tinytex) # For making a pdf
+library(tibble) # For the temporary data
+library(dplyr)
+library(tidyr)
+library(RColorBrewer) # For heat map
+options(scipen=999) # Fix y-axis formats (for R in general)
+```
+
+```{r}
+data<-read_excel("25632.xlsx",1)
+data$date<-as.Date(data$date)
+data[data<0]<-0 # To simplify: We set negative values to zero
+```
+
+
+# --- PART A ---
+
+## Descriptive Statistics
+
+```{r}
+
+# Enter column to calculate
+column<-5
+
+# Select dates
+date1<-"2020-03-31"
+date2<-"2021-03-31"
+date3<-"2022-03-31"
+
+# Filter data
+data1<-data[data$date==date1,column]
+data2<-data[data$date==date2,column]
+data3<-data[data$date==date3,column]
+
+# Create functions
+functions<-function(x){
+    list("N"            = sum (!is.na(x)),
+         "Min"          = min (x, na.rm = TRUE),
+         "Max"          = max (x, na.rm = TRUE),
+         "1st Quartile" = format(round(as.vector(quantile(x, probs = 0.25, na.rm = TRUE)),2), nsmall=2),
+         "Median"       = format(round(median (x, na.rm = TRUE),2),nsmall=2),         
+         "3rd Quartile" = format(round(as.vector(quantile(x, probs = 0.75, na.rm = TRUE)),2), nsmall=2),
+         "Mean"         = format(round(mean(x, na.rm = TRUE),2), nsmall=2),
+         "Stdev"        = format(round(sd  (x, na.rm = TRUE),2),nsmall=2))}
+
+
+# Apply functions to data
+column1<-sapply(data1, functions)
+column2<-sapply(data2, functions)
+column3<-sapply(data3, functions)
+
+# Create table
+table<-cbind(column1,column2,column3)
+
+# Format table
+colnames(table)<-c(date1,date2,date3)
+
+# Print table
+kable(table,
+      format="latex",
+      caption="Total COVID-19 Cases",
+      align=rep('r',5),
+      booktabs=TRUE)%>%
+kable_styling(latex_options = 
+                c("striped", "hold_position"))
+```
+Looking at these stats we can see that basically all stats have increased curing the years. We can also see that in 2022-03-31 a staggering total of 80 million people had been infected. Judging by the mean and median alone, it is pretty obvious that the infection has been spreading really rapidly over these two years, about a 300 times increase when comparing the mean from 2020 and 2022. 
+
+\newpage
+
+## Bar Plots
+
+```{r, out.width=c('50%', '50%'), fig.show='hold'}
+
+# Pick column to plot
+data_column<-5
+
+# Pick column to sort after
+sort_column1<-5
+sort_column2<-15
+
+# Pick column for x-axis names
+name_column<-3
+
+# Select end date
+date<-"2020-03-31"
+
+# Filter data for selected date
+filtered_data<-data[data$date==date,]
+
+# Sort data by s variable in decreasing order
+sorted_data1<-filtered_data[order(-filtered_data[,sort_column1]),]
+sorted_data2<-filtered_data[order(-filtered_data[,sort_column2]),]
+
+# Transpose data (for chosen column)
+transposed_data1<-t(sorted_data1[,data_column])
+transposed_data2<-t(sorted_data2[,data_column])
+
+# Create names
+names1<-t(sorted_data1[,name_column])
+names2<-t(sorted_data2[,name_column])
+
+# Specify plot margins (bottom, left, top, right)
+margins<-par(mar=c(10,5,2,2))
+
+# Create plots
+barplot(transposed_data1, 
+        main="Total COVID-19 cases per country",
+        names.arg = names1,
+        las=2)
+
+barplot(transposed_data2, 
+        main="Total COVID-19 cases per country (sorting: GDP/Cap)",
+        names.arg = names2,
+        las=2)
+
+# Remove margins from workspace
+rm(margins)
+```
+GDP per capita seems to be somewhat related to the spread of corona with a few exceptions. One explanation of this is that people who live in high GDP per capita countries tend to live denser in large cities, which in turn promotes the spread of the virus.One notable exception for this is China who seemingly does not have the highest GDP per capita. China do, however, have some the largest cities in the world so it makes sense that their spread is high.
+
+It must also be noted that countries with comparatively high GDP also tend to have better healthcare. In this instance, however, the population density and urbanization seems to be of more importance. 
+
+
+
+
+\newpage
+
+## Box Plots
+
+```{r, out.width=c('50%', '50%'), fig.show='hold'}
+
+# Pick column
+column<-5
+
+# Select dates
+date1<-"2021-03-31"
+date2<-"2022-03-31"
+
+# Filter data
+box_data<-data[data$date==date1|
+               data$date==date2,]
+
+# Create two new variables:
+# Cases per GDP/Capita
+box_data$cases_per_GDP <- (box_data$total_cases/box_data$gdp_per_capita)
+# Cases per popolation density
+box_data$cases_per_pop_den <- (box_data$total_cases/box_data$population_density)
+
+# Apply margins to plots
+margins<-par(mar=c(5,10,2,2))
+
+boxplot(box_data$total_cases_per_million~box_data$date,
+        horizontal=TRUE,
+        las=1,
+        main="Total COVID-19 Cases per Million",
+        xlab="",
+        ylab="")
+
+boxplot(box_data$total_cases_per_million~box_data$date,
+        horizontal=TRUE,
+        log = "x",
+        las=1,
+        main="Total COVID-19 Cases per Million (log scale)",
+        xlab="",
+        ylab="")
+
+# Remove margins from workspace
+rm(margins)
+```
+
+
+```{r, out.width=c('50%', '50%'), fig.show='hold'}
+
+# Pick column
+column<-5
+
+# Select dates
+date1<-"2021-03-31"
+date2<-"2022-03-31"
+
+# Filter data
+box_data<-data[data$date==date1|
+               data$date==date2,]
+
+# Create two new variables:
+# Cases per GDP/Capita
+box_data$cases_per_GDP <- (box_data$total_cases/box_data$gdp_per_capita)
+# Cases per popolation density
+box_data$cases_per_pop_den <- (box_data$total_cases/box_data$population_density)
+
+# Apply margins to plots
+margins<-par(mar=c(5,10,2,2))
+
+
+boxplot(box_data$cases_per_GDP~box_data$date,
+        horizontal=TRUE,
+        log = "x",
+        las=1,
+        main="total number of COVID-19 cases per GDP (log scale)",
+        xlab="",
+        ylab="")
+
+# Remove margins from workspace
+rm(margins)
+```
+
+```{r, out.width=c('50%', '50%'), fig.show='hold'}
+
+# Pick column
+column<-5
+
+# Select dates
+date1<-"2021-03-31"
+date2<-"2022-03-31"
+
+# Filter data
+box_data<-data[data$date==date1|
+               data$date==date2,]
+
+# Create two new variables:
+# Cases per GDP/Capita
+box_data$cases_per_GDP <- (box_data$total_cases/box_data$gdp_per_capita)
+# Cases per popolation density
+box_data$cases_per_pop_den <- (box_data$total_cases/box_data$population_density)
+
+# Apply margins to plots
+margins<-par(mar=c(5,10,2,2))
+
+
+boxplot(box_data$cases_per_pop_den~box_data$date,
+        horizontal=TRUE,
+        log = "x",
+        las=1,
+        main="total number of COVID-19 cases per population density (log scale)",
+        xlab="",
+        ylab="")
+
+# Remove margins from workspace
+rm(margins)
+```
+
+From the first two plots we can see that the box and the median has shifted to the right when comparing 2021 to 2022, this suggests that the disease is still spreading. Looking at the remaining two plots, we note that they have shifted to the right as well, and their shape remain essentially the same. This would suggest that the spreading from 2021 to 2022 have been somewhat consistent throughout different countries with different GDP and population density. We also note that log scales seem are appropriate in these cases, because it makes use of more of the graph. 
+
+
+\newpage
+
+## Scatter Plots
+
+```{r, out.width=c('50%', '50%'), fig.show='hold'}
+
+# Select dates
+date1<-"2020-04-01"
+date2<-"2021-03-31"
+date3<-"2021-04-01"
+date4<-"2022-03-31"
+
+# Filter data
+data1<-data[data$date>=date1&data$date<=date2,]
+data2<-data[data$date>=date3&data$date<=date4,]
+
+a1<-aggregate(data1$new_cases, by=list(data1$location), FUN=sum)
+a2<-aggregate(data2$new_cases, by=list(data2$location), FUN=sum)
+a <-na.omit(cbind(a1,y=a2$x))
+
+# Apply margins to plots
+margins<-par(mar=c(5,10,2,2))
+
+# Draw plot
+plot(a$x,a$y,
+        las=0,
+        main="Total COVID-19 Cases",
+        xlab=paste(date1," to ",date2,sep=""),
+        ylab=paste(date3," to ",date4,sep=""))
+
+# Draw log-plot
+plot(a$x,a$y,
+        log = "xy",
+        las=0,
+        main="Total COVID-19 Cases (log scale)",
+        xlab=paste(date1," to ",date2,sep=""),
+        ylab=paste(date3," to ",date4,sep=""))
+
+# Remove margins from workspace
+rm(margins)
+
+```
+
+These graphs show how the total covid cases in all the countries respectively have evolved from 2020-04-01 - 2021-03-31 to 2021-04-01 - 2022-03-31. As we can see from seemingly all data points, y>x. This indicates that the disese spread more rapidly during the second period. This makes sense as we have heard that the mutated variants have higher $R_0$-value and that the vaccines has shown to be less effective on them. 
+
+
+
+\newpage
+
+# --- PART B ---
+
+```{r}
+
+# Select Countries
+Country1<-"Sweden"
+Country2<-"Estonia"
+Country3<-"Greece"
+Country4<-"Belarus"
+Country5<-"Czechia"
+
+
+cat(Country1)
+cat(Country2)
+cat(Country3)
+cat(Country4)
+cat(Country5)
+
+```
+I intend to study the spread in Europe.
+
+
+## Descriptive Statistics
+
+```{r}
+
+# Pick the column of the variable you want to examine
+column<-6
+
+# Filter data
+data1<-data[data$location==Country1, column]
+data2<-data[data$location==Country2, column]
+data3<-data[data$location==Country3, column]
+data4<-data[data$location==Country4, column]
+data5<-data[data$location==Country5, column]
+
+# Create functions
+functions<-function(x){
+    list("N"            = sum (!is.na(x)),
+         "Min"          = min (x, na.rm = TRUE),
+         "Max"          = max (x, na.rm = TRUE),
+         "1st Quartile" = format(round(as.vector(quantile(x, probs = 0.25, na.rm =      TRUE)),2),nsmall=2),
+         "Median"       = format(round(median (x, na.rm = TRUE),2),nsmall=2),         
+         "3rd Quartile" = format(round(as.vector(quantile(x, probs = 0.75, na.rm = TRUE)),2),nsmall=2),
+         "Mean"         = format(round(mean(x, na.rm = TRUE),2),nsmall=2),
+         "Stdev"        = format(round(sd  (x, na.rm = TRUE),2),nsmall=2))}
+
+# Apply functions to data
+column1<-sapply(data1, functions)
+column2<-sapply(data2, functions)
+column3<-sapply(data3, functions)
+column4<-sapply(data4, functions)
+column5<-sapply(data5, functions)
+
+# Create table
+table<-cbind(column1,column2,column3,column4,column5)
+
+# Format table
+colnames(table)<-c(Country1,Country2,Country3,Country4,Country5)
+
+# Print table
+kable(table,
+      format="latex",
+      caption="Daily New COVID-19 Cases",
+      align=rep('r',5),
+      booktabs=TRUE)%>%
+kable_styling(latex_options = 
+                c("striped", "hold_position"))
+
+```
+We can see that larger countries such as Sweden, Greece and Czech Republic have a bigger mean of number of daily new covid cases, which is to be expected. Also what is interesting is that Swedens 1st quartile is 0, this basically menas that 25% of all inreported new cases were 0 (or less but that is not applicable here). This suggests one of two things. Either, we started reporting in the new cases way way too early before the spread had really started, or because Sweden failed to report the daily new cases some days, hence 0 was probably placed as a default placeholder. Following the corona spread intensively during the onset of the crisis, i know that Sweden usually didnt report during the weekends and reported the accumulated new cases a few days later. This also gives the Swedish data relatively high standard deviation. One way to combat this is to introduce a three (or more) day moving average.
+
+
+
+
+
+\newpage
+
+## Histograms
+
+```{r, out.width=c('50%', '50%'), fig.show='hold'}
+
+# Filter data
+data1<-data[data$location==Country1,]
+data2<-data[data$location==Country2,]
+data3<-data[data$location==Country3,]
+data4<-data[data$location==Country4,]
+data5<-data[data$location==Country5,]
+
+# Specify plot margins
+margins<-par(mar=c(10,5,2,2))
+
+barplot(height=data1$new_cases, 
+        main=Country1,
+        names= data1$date,
+        las=2)
+
+barplot(height=data2$new_cases, 
+        main=Country2,
+        names= data2$date,
+        las=2)
+
+barplot(height=data3$new_cases, 
+        main=Country3,
+        names= data3$date,
+        las=2)
+
+barplot(height=data4$new_cases, 
+        main=Country4,
+        names= data4$date,
+        las=2)
+
+barplot(height=data5$new_cases, 
+        main=Country5,
+        names= data5$date,
+        las=2)
+
+
+# Remove margins from workspace
+rm(margins)
+```
+Looking at these histograms, we can see how corona has spread from 2020-2022. Shared among all the histograms are a spike located arond 2022-01. A possible explanation for this is that the restrictions were lifted during these times or that people stopped working from home, or something else entirely. Although, this is better illustrated in the heatmap in a section later.
+
+
+\newpage
+
+## Box Plots
+
+```{r, out.width=c('50%', '50%'), fig.show='hold'}
+
+# Filter data
+data<-data[ data$location==Country1|
+            data$location==Country2|
+            data$location==Country3|
+            data$location==Country4|
+            data$location==Country5,]
+
+# Plot margins
+m<-par(mar=c(5,10,2,2))
+
+# Make a boxplot of daily cases
+
+boxplot(data$new_cases~data$location,
+        horizontal=TRUE,
+        las=1,
+        main="Daily COVID-19 Cases",
+        xlab="",
+        ylab="")
+
+
+# Make a boxplot of daily cases with log scale
+
+p <- data[,6]
+q <- data.frame("new_cases2"= rep(1/10,nrow(p)))
+t <- data.frame("A" = p, "B" = q)
+names(t)[1] <- "A"
+names(t)[2] <- "B"
+t$new_cases <- apply(t, 1, max)
+data[,6] <- t[,3]
+
+boxplot(data$new_cases~data$location,
+        horizontal=TRUE,
+        log = "x",
+        las=1,
+        main="Daily COVID-19 Cases log scale",
+        xlab="",
+        ylab="")
+
+# Apply margins
+rm(m)
+```
+This box plot basically encompasses some of the information in the table in a previous section, hence why we can conclude similar things from this. We see that the box in Sweden is relatively big and that it spreads to 0 as elaborated upon in a previous section. We can also see how the daily new cases, standard deviation, mean, 1st quartile and 3rd quarterly seems to vary.  We can also see that the median seems to be higher in larger countries, which is very reasonable.
+
+
+
+
+
+
+
+
+
+\newpage
+
+## Time Series Plots
+
+```{r, out.width=c('50%', '50%'), fig.show='hold'}
+
+# We add a variable to our data
+data["people_fully_vaccinated_per_100"] <- round(100*data[,18]/data[,13],2)
+
+# Specify plot margins
+m<-par(mar=c(10,5,2,2))
+
+#change the "y=______" to get the relevant graphs
+
+#Plot new cases over time 
+data %>%
+  ggplot(aes(x=date, y=new_cases, group=location, color=location)) +
+    geom_line(na.rm=TRUE) +
+      ggtitle("New Cases") + 
+        xlab("Date") + ylab("Cases") +
+          labs(colour = "Country")
+    
+#Plot total cases per million over time
+data %>%
+  ggplot(aes(x=date, y=total_cases_per_million, group=location, color=location)) +
+    geom_line(na.rm=TRUE) + 
+      ggtitle("Total Cases per million Capita") + 
+        xlab("Date") + ylab("Total Cases / mCap") +
+          labs(colour = "Country")
+
+#Plot total deaths per million over time 
+data %>%
+  ggplot(aes(x=date, y=total_deaths_per_million, group=location, color=location)) +
+    geom_line(na.rm=TRUE) +
+      ggtitle("Total Deaths per million Capita") + 
+        xlab("Date") + ylab("Total Deaths / mCap") +
+          labs(colour = "Country")
+
+#Plot total vaccinations per 100 over time 
+data %>%
+  ggplot( aes(x=date, y=people_fully_vaccinated_per_100, group=location, color=location)) +
+    geom_line(na.rm=TRUE) +
+      ggtitle("Fully Vaccinated per hundred Capita in 2021") + 
+        xlab("Date") + ylab("Fully Vaccinated / 100 people") +
+          labs(colour = "Country") +
+            scale_x_date(limit=c(as.Date("2021-01-01"),as.Date("2022-08-30")))
+
+# Remove margins from workspace
+rm(m)
+```
+
+The first graph, does a good illustrating how the total case graphs overlap. This is a profound result, that can be explained with lifted restrictions in eu.
+The second graph shows how widespread COVID is in the countries in question, it also gives a rough estimate of how widespread CORONA is in that country. We can see that Greece and Estonia had the highest total cases per million capita, this means that the disese was most prevalent comparing numer of covid cases with population. In the third graph, we would expect to see to have a similar graph to the previous one, except maybe a bit shifted, this was certainly true when looking at the early corona outbreak. However, as more people got vaccinated the disease became less lethal (at least for vaccinated people), and we can actually see some hints of this in the graph. When looking at the wave in 2021, we saw a big corresponding spike in the total deaths curve, however in 2022 the disese spiked massively in almost all countries, however the total curve increased almost or less compared to the wave from last year. Finally, looking at the fourth graph, we can see that all countries more except Belarus more or less saw a similar vaccination increase. Belarus was a little behind, increasing almost linearly, as the others increased logistically, but ultimately caught up to the others.
+
+
+
+
+
+
+
+
+
+
+
+
+```{r, out.width=c('50%', '50%'), fig.show='hold'}
+
+#Pick a date
+date1<-"2022-08-15"
+
+datax<-data[ data$date==date1,]
+lbls <- datax$location
+cases <- datax$total_cases
+deaths <- datax$total_deaths
+vaccs <- datax$total_vaccinations
+pctc <- round(cases/sum(cases)*100)
+pctd <- round(deaths/sum(deaths)*100)
+pctv <- round(vaccs/sum(vaccs)*100)
+lblsc <- paste(lbls, pctc)
+lblsd <- paste(lbls, pctd)
+lblsv <- paste(lbls, pctv)
+lblsc <- paste(lblsc,"%",sep="")
+lblsd <- paste(lblsd,"%",sep="")
+lblsv <- paste(lblsv,"%",sep="")
+pie(cases, labels = lblsc, main="Total Cases")
+
+
+pie(deaths, labels = lblsd, main="Total deaths")
+
+pie(vaccs, labels = lblsv, main="Total vaccinations")
+
+
+
+
+
+```
+
+We see that up until 2022-08-15 the majority of the corona cases were from Sweden a and Greece.  We can also see that the total cases and total deaths pie charts are quite similar, which is to be expected if we assume that European countries have similar healthcare. If we instead picked a country with comparatively less functioning healthcare, we would probably see that the total deaths would be higher relative to the total cases. We should note though, that Estonias chart is less in the total deaths than in the total cases, this might suggest that they might have better healthcare than the other countries, or that the healthcare there was more prepared for the COVID outbreak. We can also see this in the graphs in the previous section.
+
+
+\newpage
+
+# --- PART C ---
+
+```{r}
+
+data<-data[data$location==Country1|
+           data$location==Country2|
+           data$location==Country3|
+           data$location==Country4|
+           data$location==Country5,]
+data$date1<-as.numeric(format(as.Date(data$date), "%m"))
+data$date2<-as.numeric(format(as.Date(data$date), "%Y"))
+data$date3<-data$date2+data$date1*0.01
+
+country<-data$location
+month<-format(data$date3,digits=2, nsmall=2)
+cases<-round(data$new_cases_per_million, 0)
+
+df<-data.frame(country,month,cases)
+
+df<-df %>%
+  group_by(country,month) %>%
+  summarise(cases=sum(cases))
+
+df<-spread(df,month,cases)
+
+df<-with(df, df[order(df$country, decreasing = TRUE),])
+
+kable(df,
+      format="latex",
+      caption="New Cases per million per Month",
+      align=rep('r',5),
+      booktabs=TRUE) %>%
+kable_styling(latex_options =
+                c("striped", "hold_position", "scale_down"))
+```
+```{r}
+Month <-rep(1:32, times = 5)
+countries = c("Sweden","Greece","Estonia","Czechia","Belarus")
+Country <- rep(countries, each = 32)
+
+
+Sweden = c(
+  NA,
+  1,
+  460,
+  1603,
+  1630,
+  2794,
+  876,
+  699,
+  813,
+  3010,
+  11346,
+  18558,
+  12380,
+  8633,
+  14099,
+  16119,
+  9064,
+  2055,
+  960,
+  2559,
+  2490,
+  1779,
+  3186,
+  10502,
+  72197,
+  35414,
+  4462,
+  1249,
+  672,
+  1075,
+  1960, 
+  NA
+)
+
+Greece = c(
+  NA,
+NA,
+111,
+138,
+31,
+45,
+100,
+558,
+781,
+1989,
+6318,
+3213,
+1732,
+3267,
+6950,
+7788,
+5486,
+1928,
+6783,
+9060,
+6494,
+8270,
+18833,
+26036,
+69872,
+46044,
+58276,
+28099,
+12381,
+21378,
+64422,
+NA
+)
+
+
+Estonia = c(
+  NA,
+NA,
+562,
+713,
+140,
+95,
+61,
+237,
+749,
+1156,
+5573,
+11801,
+12206,
+16100,
+30723,
+11741,
+5662,
+1145,
+1877,
+6321,
+10760,
+28382,
+21535,
+14169,
+72355,
+118078,
+46568,
+11959,
+3519,
+2441,
+NA,
+NA
+)
+
+Czechia = c(
+  
+NA,
+NA,
+313,
+415,
+150,
+255,
+441,
+767,
+4387,          
+25147,
+17906,
+18585,
+25317,
+23853,
+NA,
+9365,
+2903,
+572,
+599,
+533,
+1169,
+NA, 
+36831 ,
+30987,
+51160,
+53361,
+23567,
+7902,
+1446,
+1279,
+4882,
+4831
+
+  
+)
+
+
+Belarus = c(
+  NA,
+  0,
+  18,
+  1449,
+  2978,
+  2043,
+  594,
+  422,
+  708,
+  2073,
+  3985,
+  6018,
+  5641,
+  4069,
+  3604,
+  3857,
+  3728,
+  2376,
+  3014,
+  3704,
+  5904,
+  6482,
+  5696,
+  4637,
+  4575,
+  18455,
+  4485,
+  1844,
+  262,
+  0,
+  1166,
+  0
+
+)
+Cases = c(Sweden, Greece, Estonia, Czechia, Belarus)
+
+df = data.frame(Month, Country, Cases)
+
+df %>% ggplot(aes(Month, Country, fill = Cases)) +
+  geom_tile(color = "grey50") +
+  scale_x_continuous(expand=c(0,0)) +
+  scale_fill_gradientn(colors = brewer.pal(9, "Reds"), trans = "sqrt") +
+  theme_minimal() +  
+  theme(panel.grid = element_blank(), 
+        legend.position="bottom", 
+        text = element_text(size = 8)) +
+  ggtitle("COVID-19") + 
+  ylab("") + xlab("")
+
+
+
+
+```
+In this heat map we can clearly see the "corona waves" and also how these "waves" seem to happen  simultaneously in Europe. One possible explanation of this is that traveling during these times were not really restricted provided that the traveler had a vaccination card. However, we now know that the vaccine protection against the mutated variants are limited, hence people who have received the vaccine are still susceptible to the new mutations. Infected travelers therefore risk bringing the virus across boarders.
+
+
+```{r}
+Month <-rep(1:30, times = 5)
+countries = c("Sweden","Greece","Estonia","Czechia","Belarus")
+Country <- rep(countries, each = 30)
+
+Sweden = c(
+  NA,
+  1,
+  460,
+  1603,
+  1630,
+  2794,
+  876,
+  699,
+  813,
+  3010,
+  11346,
+  18558,
+  12380,
+  8633,
+  14099,
+  16119,
+  9064,
+  2055,
+  960,
+  2559,
+  2490,
+  1779,
+  3186,
+  10502,
+  72197,
+  35414,
+  4462,
+  1249,
+  672,
+  1075,
+  1960, 
+  NA
+)
+
+Greece = c(
+  NA,
+NA,
+111,
+138,
+31,
+45,
+100,
+558,
+781,
+1989,
+6318,
+3213,
+1732,
+3267,
+6950,
+7788,
+5486,
+1928,
+6783,
+9060,
+6494,
+8270,
+18833,
+26036,
+69872,
+46044,
+58276,
+28099,
+12381,
+21378,
+64422,
+NA
+)
+
+sd_sweden <- sd(Sweden, na.rm = TRUE)
+sd_greece <- sd(Greece, na.rm = TRUE)
+mean_sweden <- mean(Sweden, na.rm = TRUE)
+mean_greece <- mean(Greece, na.rm = TRUE )
+
+
+
+table<-cbind(sd_sweden,sd_greece)
+
+# Format table
+colnames(table)<-c("Sweden sd","Greece sd")
+
+
+
+# Print table
+kable(table,
+      format="latex",
+      caption="The standard deviation of COVID cases per month",
+      align=rep('r',5),
+      booktabs=TRUE)%>%
+kable_styling(latex_options = 
+                c("striped", "hold_position"))
+
+
+table<-cbind(mean_sweden,mean_greece)
+
+# Format table
+colnames(table)<-c("Sweden mean","Greece mean")
+
+
+
+# Print table
+kable(table,
+      format="latex",
+      caption="The mean COVID cases per month",
+      align=rep('r',5),
+      booktabs=TRUE)%>%
+kable_styling(latex_options = 
+                c("striped", "hold_position"))
+
+
+
+```
+We can see that Sweden's monthly mean is lower than that for Greece, which makes sense because Greece has a bigger population than Sweden. We can also see that Greece has higher standard deviation, this indicates that some months the virus spread more rapidly than other months, this can happen as a result of lifting restrictions, traveling, etc.
+
+
+
+
+
+
+
