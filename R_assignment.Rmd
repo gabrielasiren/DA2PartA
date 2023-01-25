@@ -1,0 +1,14 @@
+---
+title: "R Assignment"
+author: "Ludwig Fredriksson"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+
+
+
+```{r}
+f<-function(x){12*sqrt(x)-6*exp(x)}
+curve(f)
+```
