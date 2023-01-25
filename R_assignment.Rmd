@@ -9,7 +9,7 @@ output: pdf_document
 
 
 ```{r}
-f<-function(x){12*sqrt(x)-11*exp(x)}
+f<-function(x){12*sqrt(x)-12*exp(x)}
 curve(f)
 
 ```
