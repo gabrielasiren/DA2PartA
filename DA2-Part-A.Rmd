@@ -1,0 +1,94 @@
+---
+title: "Data Analytics II: Project Part A"
+author: |
+    | 57
+    | Gabriela Siren, Didrik Gentili, Anna Gao, Ludwig Fredriksson
+    | 25601, 25550, 25811, XXXXX
+date: "2023-01-29"
+output: pdf_document
+df_print: paged
+geometry: margin=2cm
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(readxl)
+library(kableExtra)
+library(ggplot2)
+library(tibble)
+library(rmarkdown)
+library(knitr)
+library(tidyverse)
+library(tinytex)
+```
+
+## A.1 - Explorative Data Analysis (EDA)
+
+
+```{r A.1.1}
+
+```
+
+[your comments here]
+
+```{r A.1.2}
+
+```
+
+[your comments here]
+
+```{r A.1.3}
+
+```
+
+Do the variables Income and Age appear to be (approximately) normally distributed? 
+
+Can you think of a suitable distribution for the variable children? 
+
+
+## A.2 - Confidence Intervals
+
+```{r A.2.1}
+
+```
+
+[your comments here]
+
+```{r A.2.2}
+
+```
+
+[your comments here]
+
+```{r A.2.3}
+
+```
+
+Are the underlying assumptions for calculating this interval met in this data? 
+
+## A.3 - Confidence Intervals and the Sample Size
+
+```{r A.3.1}
+
+```
+
+[your comments here]
+
+```{r A.3.2}
+
+```
+
+How should we adjust the confidence level as the size of the sample increases? Why?
+
+
+## A.4 - Confidence Intervals: Comparison of Population Means
+
+```{r A.4.i}
+
+```
+
+[your comments here]
+
+Are underlying assumptions used to calculate this interval met in this data?
+
