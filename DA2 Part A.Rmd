@@ -3,7 +3,7 @@ title: "Data Analytics II: Project Part A"
 author: |
     | 57
     | Gabriela Siren, Didrik Gentili, Anna Gao, Ludwig Fredriksson
-    | 25601, 25550, XXXXX, XXXXX
+    | 25601, 25550, 25811, XXXXX
 date: "2023-01-29"
 output: pdf_document
 df_print: paged
