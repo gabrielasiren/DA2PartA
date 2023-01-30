@@ -27,23 +27,34 @@ library(tinytex)
 
 ```{r A.1.1}
 data <- read_excel("SegmentData57.xlsx")
-stats <- function(x){c("Mean"=mean(x)
-                       ,"Standard Deviation"=sd(x)
-                       ,"Maximum"=max(x)
-                       ,"Median"=median(x)
-                       ,"Minimum"= min(x))}
+stats <- function(x){c("Mean" = mean(x)
+                       ,"Stan. Deviaton" = sd(x)
+                       ,"Maximum" = max(x)
+                       ," Median" = median(x)
+                       ,"Minimum" = min(x))}
 summaryStatsTable <-sapply(c(data[1:1], data[3:4]),stats)
-kable(summaryStatsTable, digits = 2, col.names= c("Age","Income", "Kids"))
 
-#age <- data$age
-#meanage <- mean(age)
-#sdage <- sd(age)
-#gender <- data$gender
-#income <- data$income
-#kids <- data$kids
-#homes <- data$ownHome
-#subs <- data[,6]
-#segment <- data[,7]
+# I calculated the values and then input them since we only have to upload the pdf and not our code
+
+H0 <- c(0.5233, 0.51667, 0.86667)
+H1 <- c(0.47667, 0.48333, 0.13333)
+categories <- rbind(H0,H1)
+rownames(categories) = c("Female/False", "Male/True")
+
+kables(
+  list(
+    kable(
+      summaryStatsTable, digits = 2, col.names= c("Age","Income", "Kids"), valign = "t", booktabs = "True"
+      )
+  ,
+    kable(
+      categories, col.names = c("Gender","OwnsHome", "Subscribes"), valign = "t", booktabs = "True"
+      )
+  ),
+  caption = "Summary table for all variables",
+)
+
+
 
 ```
 
