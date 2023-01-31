@@ -22,16 +22,21 @@ library(tidyverse)
 library(tinytex)
 ```
 
+
+```{r setup Importing data}
+data <- read_excel("SegmentData57.xlsx")
+```
+
 ## A.1 - Explorative Data Analysis (EDA)
 
-
-```{r A.1.1}
-data <- read_excel("SegmentData57.xlsx")
-stats <- function(x){c("Mean" = mean(x)
-                       ,"Stan. Deviaton" = sd(x)
-                       ,"Maximum" = max(x)
-                       ," Median" = median(x)
-                       ,"Minimum" = min(x))}
+```{r A.1.1 Statistics table: numerical variable and proportion}
+stats <- function(x){c("Mean " = mean(x)
+                       ,"Stan. Deviaton " = sd(x)
+                       ,"Minimum " = min(x)
+                       , "Q1 " = quantile(x,probs=0.25)
+                       ," Median " = median(x)
+                       , "Q3 " = quantile(x, probs = 0.75)
+                       ,"Maximum " = max(x))}
 summaryStatsTable <-sapply(c(data[1:1], data[3:4]),stats)
 
 # I calculated the values and then input them since we only have to upload the pdf and not our code
@@ -53,8 +58,42 @@ kables(
   ),
   caption = "Summary table for all variables",
 )
+```
+This table tells me...
 
+```{r A.1.1 Numerical variables by segment} 
+ageSM <- data %>%
+  group_by("Segment" =data$Segment) %>%
+    summarise("Mean"=mean(data$age),
+              "StDev"= sd(data$age),
+               "Minimum"= min(data$age),
+               "Maximum"= max(data$age),
+              "Q1" = quantile(data$age,probs=0.25),
+              "Median"= median(data$age),
+               "Q3" = quantile(data$age,probs=0.75))
+kable(ageSM, caption = "Summary table for age")
 
+incomeSM <- data %>%
+  group_by("Segment" =data$Segment) %>%
+    summarise("Mean"=mean(data$income),
+              "StDev"= sd(data$income),
+               "Minimum"= min(data$income),
+               "Maximum"= max(data$income),
+              "Q1" = quantile(data$income,probs=0.25),
+              "Median"= median(data$income),
+               "Q3" = quantile(data$income,probs=0.75))
+kable(incomeSM, caption = "Summary table for income")
+
+kidsSM <- data %>%
+  group_by("Segment" =data$Segment) %>%
+    summarise("Mean"=mean(data$kids),
+              "StDev"= sd(data$kids),
+               "Minimum"= min(data$kids),
+               "Maximum"= max(data$kids),
+              "Q1" = quantile(data$kids,probs=0.25),
+              "Median"= median(data$kids),
+               "Q3" = quantile(data$kids,probs=0.75))
+kable(kidsSM, caption = "Summary table for children")
 
 ```
 
