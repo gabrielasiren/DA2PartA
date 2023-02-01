@@ -176,6 +176,13 @@ How should we adjust the confidence level as the size of the sample increases? W
 ## A.4 - Confidence Intervals: Comparison of Population Means
 
 ```{r A.4.i}
+travelersData = data[data$Segment == "Travelers",]
+
+Urban_hipData = data[data$Segment == "Urban hip",]
+
+
+
+
 
 ```
 
