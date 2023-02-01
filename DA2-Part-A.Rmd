@@ -52,7 +52,7 @@ ownHomef = sum(homedata$gender =="Female") /nrow(homedata)
 
 subm = sum(subdata$gender =="Male") /nrow(subdata)
 subf = sum(subdata$gender =="Female") /nrow(subdata)
-
+print(subm)
 
 
 
