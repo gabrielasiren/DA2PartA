@@ -176,9 +176,29 @@ How should we adjust the confidence level as the size of the sample increases? W
 ## A.4 - Confidence Intervals: Comparison of Population Means
 
 ```{r A.4.i}
-travelersData = data[data$Segment == "Travelers",]
+travelersdata = data[data$Segment == "Travelers",]
+Urban_hipdata = data[data$Segment == "Urban hip",]
 
-Urban_hipData = data[data$Segment == "Urban hip",]
+#n1 = nrow(travelersdata)
+#n2 = nrow(Urban_hipdata)
+
+# 1 is for travelers 2 is for urban_hip
+
+
+#m1 <- mean(travelersdata$income)
+#s1 <- sd(travelersdata$income)
+#t1 <- qt(0.950,n1-1)
+
+#ME1 <- t1*s1/sqrt(n1)
+
+#LCL1 <- m1-ME1
+#UCL1 <- m1+ME1
+
+t.test(travelersdata$income, conf.level = 0.90)
+t.test(Urban_hipData$income, conf.level = 0.90)
+
+
+
 
 
 
