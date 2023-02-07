@@ -90,7 +90,7 @@ ageSM <- data %>%
               "Q1" = quantile(age,probs=0.25),
               "Median"= median(age),
                "Q3" = quantile(age,probs=0.75))
-kable(ageSM, caption = "Summary table for age")
+kable(ageSM, digits = 2, caption = "Summary table for age")
 
 
 
@@ -106,7 +106,7 @@ incomeSM <- data %>%
               "Q1" = quantile(income,probs=0.25),
               "Median"= median(income),
                "Q3" = quantile(income,probs=0.75))
-kable(incomeSM, caption = "Summary table for income")
+kable(incomeSM, digits = 2, caption = "Summary table for income")
 
 kidsSM <- data %>%
   group_by(Segment) %>%
@@ -117,15 +117,38 @@ kidsSM <- data %>%
               "Q1" = quantile(kids,probs=0.25),
               "Median"= median(kids),
                "Q3" = quantile(kids,probs=0.75))
-kable(kidsSM, caption = "Summary table for children")
+kable(kidsSM, digits = 2, caption = "Summary table for children")
 
 ```
 
 [your comments here]
 
-```{r A.1.2}
+```{r A.1.2 Histograms}
+d1 <- data$age
+d2 <- data$income
+d3 <- data$kids
+
+hist(d1, breaks=30, main = "Histogram of Age", xlab= "Aggregate age")
+
+hist(d2, breaks=100, main = "Histogram of Income", xlab= "Aggregate income")
+
+hist(d3, breaks=5, main = "Histogram of Kids", xlab= "Aggregate kids")
 
 ```
+
+```{r A.1.2 Boxplots}
+#Aggregate income boxplot
+boxplot(d2,
+        main = "Aggregate Income boxplot",
+        xlab = "Income",
+        horizontal = TRUE,
+        las=1)
+
+#Segmented income boxplot
+
+
+```
+
 
 [your comments here]
 
