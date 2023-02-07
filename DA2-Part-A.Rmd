@@ -145,8 +145,31 @@ boxplot(d2,
         las=1)
 
 #Segmented income boxplot
+seg_sm<-data[data$Segment=="Suburb mix",]
+seg_uh<-data[data$Segment=="Urban hip",]
+seg_t<-data[data$Segment=="Travelers",]
+seg_mu<-data[data$Segment=="Moving up",]
 
-
+boxplot(seg_sm$income,
+        main = "Segmented Income boxplot - Suburb Mix",
+        xlab = "Income",
+        horizontal = TRUE,
+        las=1)
+boxplot(seg_uh$income,
+        main = "Segmented Income boxplot - Urban Hip",
+        xlab = "Income",
+        horizontal = TRUE,
+        las=1)
+boxplot(seg_t$income,
+        main = "Segmented Income boxplot - Travelers",
+        xlab = "Income",
+        horizontal = TRUE,
+        las=1)
+boxplot(seg_mu$income,
+        main = "Segmented Income boxplot - Moving Up",
+        xlab = "Income",
+        horizontal = TRUE,
+        las=1)
 ```
 
 
