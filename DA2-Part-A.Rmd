@@ -142,6 +142,13 @@ Can you think of a suitable distribution for the variable children?
 
 ```{r A.2.1}
 
+# R program to determine the mean
+
+# Calculate the mean of the Segment.Data57
+
+mean_value <- mean(data$income)
+
+
 ```
 
 [your comments here]
