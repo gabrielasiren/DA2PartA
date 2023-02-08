@@ -144,6 +144,7 @@ hist(d3, breaks=5, main = "Histogram of Kids", xlab= "Aggregate kids")
 boxplot(d2,
         main = "Aggregate Income boxplot",
         xlab = "Income",
+        ylab = "Age",
         horizontal = TRUE,
         las=1)
 
@@ -153,26 +154,16 @@ seg_uh<-data[data$Segment=="Urban hip",]
 seg_t<-data[data$Segment=="Travelers",]
 seg_mu<-data[data$Segment=="Moving up",]
 
-boxplot(seg_sm$income,
-        main = "Segmented Income boxplot - Suburb Mix",
-        xlab = "Income",
+
+boxplot(data$income~data$Segment,
+        main = "Boxplots for Segmented Income",
+        names = c("Suburb Mix", "Urban Hip", "Travelers", "Moving Up"),
+        las = 1,
         horizontal = TRUE,
-        las=1)
-boxplot(seg_uh$income,
-        main = "Segmented Income boxplot - Urban Hip",
-        xlab = "Income",
-        horizontal = TRUE,
-        las=1)
-boxplot(seg_t$income,
-        main = "Segmented Income boxplot - Travelers",
-        xlab = "Income",
-        horizontal = TRUE,
-        las=1)
-boxplot(seg_mu$income,
-        main = "Segmented Income boxplot - Moving Up",
-        xlab = "Income",
-        horizontal = TRUE,
-        las=1)
+        ylab = "",
+        xlab = "Income"
+        )
+
 
 ```
 
@@ -217,7 +208,7 @@ Are the underlying assumptions for calculating this interval met in this data?
 
 ## A.3 - Confidence Intervals and the Sample Size
 
-```{r A.3.1}
+```{r A.3.1 Part 1}
 
 
 ME<-0.02
@@ -232,8 +223,18 @@ n<-(((qnorm(0.95,0,1))^2)*(p*(1-p))/(ME^2))
 
 n
 
-
 ```
+
+
+```{r A.3.2 Part 2}
+ME<-0.01
+p<-0.5
+
+n<-(((qnorm(0.95,0,1))^2)*(p*(1-p))/(ME^2))
+
+n
+```
+
 
 [your comments here]
 
