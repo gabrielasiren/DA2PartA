@@ -220,12 +220,30 @@ Are the underlying assumptions for calculating this interval met in this data?
 ```{r A.3.1}
 
 
+ME<-0.02
+p<-0.5
+
+n<-(((qnorm(0.95,0,1))^2)*(p*(1-p))/(ME^2))
+
+#maximize p(1-p) -> p=0.5
+#n=(z^2*p(1-p))/(ME^2)
+#z=qnorm(0.95)
+#assume big proportion
+
+n
+
+
 ```
 
 [your comments here]
 
 ```{r A.3.2}
+ME<-0.01
+p<-0.5
 
+n<-(((qnorm(0.95,0,1))^2)*(p*(1-p))/(ME^2))
+
+n
 ```
 
 How should we adjust the confidence level as the size of the sample increases? Why?
