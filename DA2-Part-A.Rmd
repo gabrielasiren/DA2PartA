@@ -90,7 +90,7 @@ ageSM <- data %>%
               "Q1" = quantile(age,probs=0.25),
               "Median"= median(age),
                "Q3" = quantile(age,probs=0.75))
-kable(ageSM, digits = 2, caption = "Summary table for age")
+kable(ageSM, caption = "Summary table for age")
 
 
 
@@ -106,7 +106,7 @@ incomeSM <- data %>%
               "Q1" = quantile(income,probs=0.25),
               "Median"= median(income),
                "Q3" = quantile(income,probs=0.75))
-kable(incomeSM, digits = 2, caption = "Summary table for income")
+kable(incomeSM, caption = "Summary table for income")
 
 kidsSM <- data %>%
   group_by(Segment) %>%
@@ -117,61 +117,15 @@ kidsSM <- data %>%
               "Q1" = quantile(kids,probs=0.25),
               "Median"= median(kids),
                "Q3" = quantile(kids,probs=0.75))
-kable(kidsSM, digits = 2, caption = "Summary table for children")
+kable(kidsSM, caption = "Summary table for children")
 
 ```
 
 [your comments here]
 
-```{r A.1.2 Histograms}
-d1 <- data$age
-d2 <- data$income
-d3 <- data$kids
-
-hist(d1, breaks=30, main = "Histogram of Age", xlab= "Aggregate age")
-
-hist(d2, breaks=100, main = "Histogram of Income", xlab= "Aggregate income")
-
-hist(d3, breaks=5, main = "Histogram of Kids", xlab= "Aggregate kids")
+```{r A.1.2}
 
 ```
-
-```{r A.1.2 Boxplots}
-#Aggregate income boxplot
-boxplot(d2,
-        main = "Aggregate Income boxplot",
-        xlab = "Income",
-        horizontal = TRUE,
-        las=1)
-
-#Segmented income boxplot
-seg_sm<-data[data$Segment=="Suburb mix",]
-seg_uh<-data[data$Segment=="Urban hip",]
-seg_t<-data[data$Segment=="Travelers",]
-seg_mu<-data[data$Segment=="Moving up",]
-
-boxplot(seg_sm$income,
-        main = "Segmented Income boxplot - Suburb Mix",
-        xlab = "Income",
-        horizontal = TRUE,
-        las=1)
-boxplot(seg_uh$income,
-        main = "Segmented Income boxplot - Urban Hip",
-        xlab = "Income",
-        horizontal = TRUE,
-        las=1)
-boxplot(seg_t$income,
-        main = "Segmented Income boxplot - Travelers",
-        xlab = "Income",
-        horizontal = TRUE,
-        las=1)
-boxplot(seg_mu$income,
-        main = "Segmented Income boxplot - Moving Up",
-        xlab = "Income",
-        horizontal = TRUE,
-        las=1)
-```
-
 
 [your comments here]
 
@@ -187,11 +141,6 @@ Can you think of a suitable distribution for the variable children?
 ## A.2 - Confidence Intervals
 
 ```{r A.2.1}
-# R program to determine the mean
-
-# Calculate the mean of the Segment.Data57
-
-mean_value <- mean(data$income)
 
 # R program to determine the mean
 
@@ -253,7 +202,7 @@ Urban_hipdata = data[data$Segment == "Urban hip",]
 #UCL1 <- m1+ME1
 
 t.test(travelersdata$income, conf.level = 0.90)
-t.test(Urban_hipData$income, conf.level = 0.90)
+t.test(Urban_hipdata$income, conf.level = 0.90)
 
 
 
