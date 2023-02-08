@@ -161,7 +161,7 @@ boxplot(data$income~data$Segment,
         las = 1,
         horizontal = TRUE,
         ylab = "",
-        xlab = "Income"
+        xlab = "Income",
         )
 
 
