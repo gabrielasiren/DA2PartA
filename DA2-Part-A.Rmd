@@ -162,6 +162,7 @@ boxplot(data$income~data$Segment,
         horizontal = TRUE,
         ylab = "",
         xlab = "Income",
+        cex.axis = 0.7 # decrease the font label of the y axis
         )
 
 
@@ -254,28 +255,39 @@ How should we adjust the confidence level as the size of the sample increases? W
 
 ```{r A.4.i}
 travelersdata = data[data$Segment == "Travelers",]
-Urban_hipdata = data[data$Segment == "Urban hip",]
-
-#n1 = nrow(travelersdata)
-#n2 = nrow(Urban_hipdata)
-
-# 1 is for travelers 2 is for urban_hip
+urban_hipdata = data[data$Segment == "Urban hip",]
 
 
-#m1 <- mean(travelersdata$income)
-#s1 <- sd(travelersdata$income)
-#t1 <- qt(0.950,n1-1)
+# getting the samplesizes
+nx = nrow(travelersdata)
+ny = nrow(urban_hipdata)
 
-#ME1 <- t1*s1/sqrt(n1)
+# data for travelers
+mx <- mean(travelersdata$income)
+sx <- sd(travelersdata$income)
+# data for urban
 
-#LCL1 <- m1-ME1
-#UCL1 <- m1+ME1
+my <- mean(urban_hipdata$income)
+sy <- sd(urban_hipdata$income)
 
-t.test(travelersdata$income, conf.level = 0.90)
-t.test(Urban_hipdata$income, conf.level = 0.90)
+# refer to 8.10 in Newbold p 318
+
+v <- (sx^2/nx + sy^2/ny)^2/ ((sx^2/nx)^2/(nx-1) + (sy^2/ny)^2/(ny-1))
+
+t <- qt(0.95, v)
+
+ME <- t*(sx^2/nx + sy^2/ny)^(0.5)
+
+LCL <- (mx-my) - ME
+UCL <- (mx-my) + ME
 
 
-
+print("The income differnce is:" )
+print(mx-my)
+print("the 90 % confidence interval is:")
+print(LCL)
+print("to")
+print(UCL)
 
 
 
