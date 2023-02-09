@@ -3,7 +3,7 @@ title: "Data Analytics II: Project Part A"
 author: |
     | 57
     | Gabriela Siren, Didrik Gentili, Anna Gao, Ludwig Fredriksson
-    | 25601, 25550, 25811, XXXXX
+    | 25601, 25550, 25811, 25632
 date: "2023-01-29"
 output: pdf_document
 df_print: paged
@@ -184,11 +184,7 @@ Can you think of a suitable distribution for the variable children?
 
 ```{r A.2.1}
 
-# R program to determine the mean
-
-# Calculate the mean of the Segment.Data57
-
-mean_value <- mean(data$income)
+# 
 
 
 ```
