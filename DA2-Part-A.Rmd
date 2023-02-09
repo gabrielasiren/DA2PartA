@@ -183,8 +183,26 @@ Can you think of a suitable distribution for the variable children?
 ## A.2 - Confidence Intervals
 
 ```{r A.2.1}
+income_agg <- data$income
+n <- length(income_agg)
+m <- mean(income_agg)
+s <- sd(income_agg)
+t <- qt(0.95, n-1)
 
-# 
+ME<- t * s/(n^(0.5))
+
+LCL = m - ME
+UCL = m + ME
+
+print("aggreate lever income conficence interval at 90% confidence")
+m
+LCL
+UCL
+
+# to get the data from the segmented levels  and male / female look at how we did it in A.4.
+
+
+
 
 
 ```
@@ -192,6 +210,21 @@ Can you think of a suitable distribution for the variable children?
 [your comments here]
 
 ```{r A.2.2}
+
+# In this part we are dealing with a true/false variable subsribers (a bool variable either subNo or subYes)
+# we want to transform this to numbers so subYes becomes 1 and subNo becomes 0
+
+# at aggregate level we get
+
+
+n = nrow(data) 
+p = sum(data$subscribe == "subYes")/n
+
+#then look at p 284 in Newbold to figure out the confidence interval 
+
+
+
+
 
 ```
 
