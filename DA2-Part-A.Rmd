@@ -41,43 +41,47 @@ stats <- function(x){c("Mean " = mean(x)
 summaryStatsTable <-sapply(c(data[1:1], data[3:4]),stats)
 
 
-homedata = data[data$ownHome == "ownYes",]
-subdata = data[data$subscribe == "subYes",]
+#number of rows in the data table
+rowD <- nrow(data)
 
-ownHomem = sum(homedata$gender =="Male") /nrow(homedata)
-ownHomef = sum(homedata$gender =="Female") /nrow(homedata)
+ownHomeY = sum(data$ownHome == "ownYes") /rowD
+ownHomeN = sum(data$ownHome == "ownNo") /rowD
 
-subm = sum(subdata$gender =="Male") /nrow(subdata)
-subf = sum(subdata$gender =="Female") /nrow(subdata)
+subY = sum(data$subscribe == "subYes") /rowD
+subN = sum(data$subscribe == "subNo") /rowD
 
-mStats <- sum(data$gender == "Male") /nrow(data)
-fStats <- sum(data$gender == "Female") /nrow(data)
+mStats <- sum(data$gender == "Male") /rowD
+fStats <- sum(data$gender == "Female") /rowD
 
 
 
-H0 <- c(fStats, ownHomef, subf)
-H1 <- c(mStats, ownHomem, subm)
+H0 <- c(fStats, ownHomeN, subN)
+H1 <- c(mStats, ownHomeY, subY)
 
 
 
 
 categories <- rbind(H0,H1)
-rownames(categories) = c("Female/False", "Male/True")
+rownames(categories) = c("Female or False", "Male or True")
 
 kables(
   list(
     kable(
-      summaryStatsTable, digits = 2, col.names= c("Age","Income", "Kids"), valign = "t", booktabs = "True"
+      summaryStatsTable, digits = 2, col.names = c("Age","Income", "Kids"), valign = "t", booktabs = "True"
       )
   ,
     kable(
       categories, digits = 3, col.names = c("Gender","OwnsHome", "Subscribes"), valign = "t", booktabs = "True"
       )
   
-  ),caption = "Summary table for all variables") %>%
+  ),caption =  "Summary table for all variables") %>%
 kable_styling(latex_options = "hold_position")
 ```
-This table tells me...
+|   As shown by Table 1, ages range between 17 to 77 with a median of 39. The mean age is 40.74 which is slightly larger than the median. Additionally, the majority of the ages are in between 33 and 48.25. 
+|   The income has a very large range, from roughly 11 000 to 139 000. The median, 53000 and mean, 52000 are closer to the minimum than the maximum meaning the data is skewed towards the lower values. 
+|   The kids are also skewed towards lower values. The range goes from 0 to 7 but the mean is 1.32 while the median is 1. This all gives us an accurate picture of the distribution of the data.
+|
+|   On the other hand, there is a relatively even proportion between two of the categorical variables, excluding the subscribers. While there is roughly 4 percent difference between males and females, they are both around 50%. The same applies for people owning homes. However, the proportion of subscribers is not distributed evenly as more than 85% of the sample does not subscribe. While this tells that the majority do not subscribe and that the sample has an even proportion of categories, this does not give us specific categorical values, for example, whether more Females or Males subscribe.
 
 ```{r A.1.1 Numerical variables by segment} 
 ageSM <- data %>%
