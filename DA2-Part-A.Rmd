@@ -39,9 +39,6 @@ stats <- function(x){c("Mean " = mean(x)
                        , "Q3 " = quantile(x, probs = 0.75)
                        ,"Maximum " = max(x))}
 summaryStatsTable <-sapply(c(data[1:1], data[3:4]),stats)
-# I calculated the values and then input them since we only have to upload the pdf and not our code
-
-# I added some code to calculate the category data, but im curious about how you calculated H0 and H1, i dont get the same answers
 
 
 homedata = data[data$ownHome == "ownYes",]
@@ -52,12 +49,14 @@ ownHomef = sum(homedata$gender =="Female") /nrow(homedata)
 
 subm = sum(subdata$gender =="Male") /nrow(subdata)
 subf = sum(subdata$gender =="Female") /nrow(subdata)
-print(subm)
+
+mStats <- sum(data$gender == "Male") /nrow(data)
+fStats <- sum(data$gender == "Female") /nrow(data)
 
 
 
-H0 <- c(0.5233, 0.51667, 0.86667)
-H1 <- c(0.47667, 0.48333, 0.13333)
+H0 <- c(fStats, ownHomef, subf)
+H1 <- c(mStats, ownHomem, subm)
 
 
 
@@ -72,7 +71,7 @@ kables(
       )
   ,
     kable(
-      categories, col.names = c("Gender","OwnsHome", "Subscribes"), valign = "t", booktabs = "True"
+      categories, digits = 3, col.names = c("Gender","OwnsHome", "Subscribes"), valign = "t", booktabs = "True"
       )
   ),
   caption = "Summary table for all variables",
