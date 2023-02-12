@@ -73,9 +73,9 @@ kables(
     kable(
       categories, digits = 3, col.names = c("Gender","OwnsHome", "Subscribes"), valign = "t", booktabs = "True"
       )
-  ),
-  caption = "Summary table for all variables",
-)
+  
+  ),caption = "Summary table for all variables") %>%
+kable_styling(latex_options = "hold_position")
 ```
 This table tells me...
 
@@ -90,8 +90,6 @@ ageSM <- data %>%
               "Median"= median(age),
                "Q3" = quantile(age,probs=0.75))
 kable(ageSM, digits = 2, caption = "Summary table for age")
-
-
 
 
 
