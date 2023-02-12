@@ -54,11 +54,8 @@ mStats <- sum(data$gender == "Male") /rowD
 fStats <- sum(data$gender == "Female") /rowD
 
 
-
 H0 <- c(fStats, ownHomeN, subN)
 H1 <- c(mStats, ownHomeY, subY)
-
-
 
 
 categories <- rbind(H0,H1)
@@ -78,7 +75,7 @@ kables(
 kable_styling(latex_options = "hold_position")
 ```
 |   As shown by Table 1, ages range between 17 to 77 with a median of 39. The mean age is 40.74 which is slightly larger than the median. Additionally, the majority of the ages are in between 33 and 48.25. 
-|   The income has a very large range, from roughly 11 000 to 139 000. The median, 53000 and mean, 52000 are closer to the minimum than the maximum meaning the data is skewed towards the lower values. 
+|   The income has a very large range, from roughly 11 000 to 139 000. The median, 53000 and mean, 52000 are closer to the minimum than the maximum meaning the data is skewed towards the lower values. The 3rd quartile is also very close to the median/mean meaning that there are some potential extreme values.
 |   The kids are also skewed towards lower values. The range goes from 0 to 7 but the mean is 1.32 while the median is 1. This all gives us an accurate picture of the distribution of the data.
 |
 |   On the other hand, there is a relatively even proportion between two of the categorical variables, excluding the subscribers. While there is roughly 4 percent difference between males and females, they are both around 50%. The same applies for people owning homes. However, the proportion of subscribers is not distributed evenly as more than 85% of the sample does not subscribe. While this tells that the majority do not subscribe and that the sample has an even proportion of categories, this does not give us specific categorical values, for example, whether more Females or Males subscribe.
@@ -122,24 +119,34 @@ kable(kidsSM, digits = 2, caption = "Summary table for children")
 
 ```
 
-[your comments here]
 
-```{r A.1.2 histograms}
+```{r A.1.2 Age histogram}
 
 d1 <- data$age
 d2 <- data$income
 d3 <- data$kids
 
-hist(d1, breaks=30, main = "Histogram of Age", xlab= "Aggregate age")
+hist(d1, breaks=50, main = "Histogram of Age", xlab= "Aggregate age")
+```
 
+|   The histogram is very centered around the mean while the median is a bit greater than where the majority lie. Additionally, there seems to be an observation above all the other ones at 77 so it could potentially be an outlier. The distribution could have been normally distributed but when increasing the number of breaks, it was revealed that there are almost two peaks. 
+
+
+```{r A.1.2 Income histogram}
 hist(d2, breaks=100, main = "Histogram of Income", xlab= "Aggregate income")
+```
 
-hist(d3, breaks=5, main = "Histogram of Kids", xlab= "Aggregate kids")
+|   The income histogram is also centered around its mean and median. There is an observation at roughly 139 000 which is definitely an outlier in this case. Excluding the outlier, the above sample can be approximated to a normal distribution. However, there is a small peak around 20 000 which might contradict that approximation.
+
+
+```{r A.1.2 Kids histogram}
+hist(d3, breaks=35, main = "Histogram of Kids", xlab= "Aggregate kids")
 
 ```
 
+|   The histogram of Kids is centered around the minimum rather than median or the mean and this could be because of the outlier at 7. The median in this case is more central than the mean as a result of this outlier. 
 
-```{r A.1.2 Boxplots}
+```{r A.1.2 Aggregate Boxplot}
 
 #Aggregate income boxplot
 boxplot(d2,
@@ -148,7 +155,12 @@ boxplot(d2,
         ylab = "Age",
         horizontal = TRUE,
         las=1)
+```
 
+|   The Aggregate Income boxplots supports the claims made from the histogram. While there is quite a even distribution centered around the median, there is an extreme value at around 139 000. The quartiles, and the maximum and minimum are also more or less evenly distributed. 
+
+
+```{r A.1.2 Segmented Boxplot}
 #Segmented income boxplot
 seg_sm<-data[data$Segment=="Suburb mix",]
 seg_uh<-data[data$Segment=="Urban hip",]
@@ -168,9 +180,10 @@ boxplot(data$income~data$Segment,
 
 
 ```
+|   As shown by the boxplot above, there is a significant difference between the data from different segments. For example, the median moving up income is around 20 000 while for Travelers it is 65 000. Urban hip and Suburb mix have a slightly lower median income at around 52 000 and 50 000 respectively. Furthermore, while the Travelers segment has a far outlier, it does not affect the median so the current boxplot is accurate.  
+|   Additionally, there is also a much lower minimum and maximum value for Moving Up compared to the rest. The Moving Up and Urban Hip segment is also not skewed compared to the other two. Travelers is slightly skewed towards the left while Suburban mix is skewed to the right. 
 
 
-[your comments here]
 
 ```{r A.1.3}
 
