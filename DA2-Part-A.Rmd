@@ -129,7 +129,7 @@ d3 <- data$kids
 hist(d1, breaks=50, main = "Histogram of Age", xlab= "Aggregate age")
 ```
 
-|   The histogram is very centered around the mean while the median is a bit greater than where the majority lie. Additionally, there seems to be an observation above all the other ones at 77 so it could potentially be an outlier. The distribution could have been normally distributed but when increasing the number of breaks, it was revealed that there are almost two peaks. 
+|   The histogram is very centered around the mean while the median is a bit greater than where the majority lie. Additionally, there seems to be an observation above all the other ones at 77 so it could potentially be an outlier. The distribution could have been normally distributed but when increasing the number of breaks, it was revealed that there are almost two modes. However, it is still possible to approximate this distribution to a normal one. 
 
 
 ```{r A.1.2 Income histogram}
@@ -140,7 +140,7 @@ hist(d2, breaks=100, main = "Histogram of Income", xlab= "Aggregate income")
 
 
 ```{r A.1.2 Kids histogram}
-hist(d3, breaks=35, main = "Histogram of Kids", xlab= "Aggregate kids")
+hist(d3, breaks=30, main = "Histogram of Kids", xlab= "Aggregate kids")
 
 ```
 
@@ -191,7 +191,10 @@ boxplot(data$income~data$Segment,
 
 Do the variables Income and Age appear to be (approximately) normally distributed? 
 
+|   The Income and Age variables appear to be approximately normally distributed, even if there appears to be two "modes" in the Age variable, as mentioned above. 
+
 Can you think of a suitable distribution for the variable children? 
+|   The Children variable is not approximately normally distributed as it appears rather like a Chi-squared distribution. The distribution is very skewed to the right, with the mode furthest to the left. 
 
 
 ## A.2 - Confidence Intervals
