@@ -299,6 +299,9 @@ How should we adjust the confidence level as the size of the sample increases? W
 
 ## A.4 - Confidence Intervals: Comparison of Population Means
 
+
+
+
 ```{r A.4.i}
 travelersdata = data[data$Segment == "Travelers",]
 urban_hipdata = data[data$Segment == "Urban hip",]
@@ -328,12 +331,6 @@ LCL <- (mx-my) - ME
 UCL <- (mx-my) + ME
 
 
-print("The income differnce is:" )
-print(mx-my)
-print("the 90 % confidence interval is:")
-print(LCL)
-print("to")
-print(UCL)
 
 
 
@@ -341,7 +338,8 @@ print(UCL)
 
 ```
 
-[your comments here]
+To determine the confidence interval for the difference of population means, we used the Welch's t-test on 80 samples of travelers and 50 samples from the urban hip segment. We assumed that observations in each sample were independently and randomly chosen, and that the populations follow normal distributions. The results showed that the 90% confidence interval for the difference of the mean income $(\bar{x}_{travelers} - \bar{x}_{Urban hip})$ was (42849, 50557), thus indicating a significant difference in the mean income between the two segments with a high degree of confidence.
 
-Are underlying assumptions used to calculate this interval met in this data?
+
+
 
