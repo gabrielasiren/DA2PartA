@@ -191,15 +191,6 @@ t<-cbind(ME,LCL,UCL)
 colnames(t)<-c("ME", "LCL", "UCL")
 
 
-kable(t,
-      caption="Confidence Interval with Significance Level of 90% for Aggregate Level of Income",
-      format="simple")
-
-
-
-tTest <- t.test(t)
-
-tTest
 # to get the data from the segmented levels  and male / female look at how we did it in A.4.
 
 ```
@@ -207,6 +198,7 @@ tTest
 
 
 ```{r A.2.1 References, comment= " "}
+
 
 # references
 travelersdata = data[data$Segment == "Travelers",]
@@ -233,7 +225,7 @@ ME<-z*s/(n^(0.5))
 LCL = m - ME
 UCL = m + ME
 
-T <- c(ME,LCL,UCL)
+t <- c(ME,LCL,UCL)
 
 # getting the sample sizes
 nx = nrow(travelersdata)
@@ -286,22 +278,33 @@ uclM = mu + meM
 
 tM <- cbind(meM,lclM,uclM)
 
+ciData <- rbind(t,tT,tU,tS,tM)
+colnames(ciData) <- c("ME","LCL","UCL")
+rownames(ciData) <- c("Aggregate","Travellers","Urban Hip","Suburb Mix","Moving Up")
 
-tTestAgg <- t.test(T)
+kable(ciData,
+      caption="90% C.I for Income, both Aggregate and Segmented",
+      format="simple",
+      digits=2)
+
+tTestAgg <- t.test(t)
 tTestTra <- t.test(tT)
 tTestUrb <- t.test(tU)
 tTestSub <- t.test(tS)
 tTestMov <- t.test(tM)
 
-finaltTest <- map_df(list(tTestAgg,tTestTra,tTestUrb,tTestSub,tTestMov),tidy)
+finaltTest <- map_df(list(tTestAgg,tTestTra,tTestUrb,tTestSub,tTestMov), tidy)
+
 finaltTest[,c("method","alternative")] <- NULL
-colnames(finaltTest) <- c("Estimate","Statistic","P.Value", "Parameter","Conf.Low","Conf.High")
+
+
+finaltTest <- cbind(c("Aggregate","Travellers","Urban Hip","Suburb Mix","Moving Up"),
+finaltTest)
+colnames(finaltTest) <- c("Segments","Estimate","Statistic","P.Value", "Parameter","Conf.Low","Conf.High")
+#rownames(finaltTest) <- c("Aggregate","Travellers","Urban Hip","Suburb Mix","Moving Up")
 
 kable(finaltTest,
       caption = "T-test table for Income, both Aggregate and Segmented",format="simple", digits = 3)
-
-
-
 
 
 
