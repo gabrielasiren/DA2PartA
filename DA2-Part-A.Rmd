@@ -21,6 +21,8 @@ library(knitr)
 library(tidyverse)
 library(tinytex)
 library(dplyr)
+library(broom)
+library(purrr)
 ```
 
 
@@ -81,7 +83,7 @@ kable_styling(latex_options = "hold_position")
 |   On the other hand, there is a relatively even proportion between two of the categorical variables, excluding the subscribers. While there is roughly $4$ percent difference between males and females, they are both around $50%$. The same applies for people owning homes. However, the proportion of subscribers is not distributed evenly as more than $85%$ of the sample does not subscribe. While this tells that the majority do not subscribe and that the sample has an even proportion of categories, this does not give us specific categorical values, for example, whether more Females or Males subscribe.
 
 
-```{r A.1.2 Age histogram}
+```{r A.1.2 Age histogram, fig.dim = c(4,4)}
 
 d1 <- data$age
 d2 <- data$income
@@ -93,21 +95,21 @@ hist(d1, breaks=50, main = "Histogram of Age", xlab= "Aggregate age")
 |   The histogram is very centered around the mean while the median is a bit greater than where the majority lie. Additionally, there seems to be an observation above all the other ones at $77$ so it could potentially be an outlier. The distribution could have been normally distributed but when increasing the number of breaks, it was revealed that there are almost two modes. However, it is still possible to approximate this distribution to a normal one. 
 
 
-```{r A.1.2 Income histogram}
+```{r A.1.2 Income histogram, fig.dim = c(4,4)}
 hist(d2, breaks=100, main = "Histogram of Income", xlab= "Aggregate income")
 ```
 
 |   The income histogram is also centered around its mean and median. There is an observation at roughly $139000$ which is definitely an outlier in this case. Excluding the outlier, the above sample can be approximated to a normal distribution. However, there is a small peak around $20000$ which might contradict that approximation.
 
 
-```{r A.1.2 Kids histogram}
+```{r A.1.2 Kids histogram, fig.dim = c(4,4)}
 hist(d3, breaks=30, main = "Histogram of Kids", xlab= "Aggregate kids")
 
 ```
 
 |   The histogram of Kids is centered around the minimum rather than median or the mean and this could be because of the outlier at $7$. The median in this case is more central than the mean as a result of this outlier. 
 
-```{r A.1.2 Aggregate Boxplot}
+```{r A.1.2 Aggregate Boxplot, fig.dim = c(4,4)}
 
 #Aggregate income boxplot
 boxplot(d2,
@@ -121,7 +123,7 @@ boxplot(d2,
 |   The Aggregate Income boxplots supports the claims made from the histogram. While there is quite a even distribution centered around the median, there is an extreme value at around $139000$. The quartiles, and the maximum and minimum are also more or less evenly distributed. 
 
 
-```{r A.1.2 Segmented Boxplot}
+```{r A.1.2 Segmented Boxplot, fig.dim = c(4,4)}
 #Segmented income boxplot
 seg_sm<-data[data$Segment=="Suburb mix",]
 seg_uh<-data[data$Segment=="Urban hip",]
@@ -193,9 +195,11 @@ kable(t,
       caption="Confidence Interval with Significance Level of 90% for Aggregate Level of Income",
       format="simple")
 
-tTest <- t.test(t)
-tTest
 
+
+tTest <- t.test(t)
+
+tTest
 # to get the data from the segmented levels  and male / female look at how we did it in A.4.
 
 ```
@@ -208,16 +212,34 @@ tTest
 travelersdata = data[data$Segment == "Travelers",]
 urban_hipdata = data[data$Segment == "Urban hip",]
 suburb_mixdata = data[data$Segment == "Suburb mix",]
+movingUpData <- data[data$Segment == "Moving up",]
 
 
 # definitions for income
 travelersdata_income <- travelersdata$income
 urban_hipdata_income <- urban_hipdata$income
 suburb_mixdata_income <- suburb_mixdata$income
+movingUpData_income <- movingUpData$income
+
+income_agg <- data$income
+n <- length(income_agg)
+m <- mean(income_agg)
+s <- sd(income_agg)
+z <- qnorm(0.95)
+
+ME<-z*s/(n^(0.5))
+
+
+LCL = m - ME
+UCL = m + ME
+
+T <- c(ME,LCL,UCL)
 
 # getting the sample sizes
 nx = nrow(travelersdata)
 ny = nrow(urban_hipdata)
+nz = nrow(suburb_mixdata)
+nu = nrow(movingUpData)
 
 # data for travelers
 mx <- mean(travelersdata$income)
@@ -227,15 +249,61 @@ sx <- sd(travelersdata$income)
 my <- mean(urban_hipdata$income)
 sy <- sd(urban_hipdata$income)
 
-ME<- z * s/(n^(0.5))
+# data for suburbMix
+mz <- mean(suburb_mixdata$income)
+sz <- sd(suburb_mixdata$income)
 
-LCL = m - ME
-UCL = m + ME
+# data for MovingUp
+mu <- mean(movingUpData$income)
+su <- sd(movingUpData$income)
 
-cat("Aggregate lever income conficence interval at 90% confidence")
-cat(m)
-cat(LCL)
-cat(UCL)
+meT<-z*sx/(nx^(0.5))
+
+lclT = mx - meT
+uclT = mx + meT
+
+tT <- cbind(meT,lclT,uclT)
+
+
+meU<-z*sy/(ny^(0.5))
+
+lclU = my - meU
+uclU = my + meU
+
+tU <- cbind(meU,lclU,uclU)
+
+meS<-z*sz/(nz^(0.5))
+
+lclS = mz - meS
+uclS = mz + meS
+
+tS <- cbind(meS,lclS,uclS)
+
+meM<-z*su/(nu^(0.5))
+
+lclM = mu - meM
+uclM = mu + meM
+
+tM <- cbind(meM,lclM,uclM)
+
+
+tTestAgg <- t.test(T)
+tTestTra <- t.test(tT)
+tTestUrb <- t.test(tU)
+tTestSub <- t.test(tS)
+tTestMov <- t.test(tM)
+
+finaltTest <- map_df(list(tTestAgg,tTestTra,tTestUrb,tTestSub,tTestMov),tidy)
+finaltTest[,c("method","alternative")] <- NULL
+colnames(finaltTest) <- c("Estimate","Statistic","P.Value", "Parameter","Conf.Low","Conf.High")
+
+kable(finaltTest,
+      caption = "T-test table for Income, both Aggregate and Segmented",format="simple", digits = 3)
+
+
+
+
+
 
 ```
 
@@ -287,7 +355,6 @@ n1<-((Z^2)*(p*(1-p))/(ME^2))
 #z=qnorm(0.95)
 #assume big proportion
 
-n1
 
 #3.1 part 2, 1% ME
 
@@ -297,7 +364,6 @@ Z<-qnorm(0.95,0,1)
 
 n2<-((Z^2)*(p*(1-p))/(ME^2))
 
-n2
 
 #table?
 
@@ -312,15 +378,16 @@ kable(table_3_1,
 
 
 ```
+
 |   It may not be worth the cost since the sample size would have to increase by a lot in order lower the ME only a little bit. In this case from 1691 to 6764 (around 4 times) in order to only decrease the ME from 2% to 1%. 
 
-```{r A.3.2}
+```{r A.3.2, comment = " "}
 ME<-0.01
 p<-0.5
 
 n<-(((qnorm(0.95,0,1))^2)*(p*(1-p))/(ME^2))
 
-n
+cat(n)
 ```
 
 
