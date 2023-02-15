@@ -187,10 +187,6 @@ cat(m)
 cat(LCL)
 cat(UCL)
 
-t<-cbind(ME,LCL,UCL)
-colnames(t)<-c("ME", "LCL", "UCL")
-
-
 # to get the data from the segmented levels  and male / female look at how we did it in A.4.
 
 ```
