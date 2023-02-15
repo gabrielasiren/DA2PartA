@@ -164,34 +164,86 @@ boxplot(data$income~data$Segment,
 
 ## A.2 - Confidence Intervals
 
-```{r A.2.1}
+```{r A.2.1, comment= " "}
+
+
+#aggregate income
 income_agg <- data$income
 n <- length(income_agg)
 m <- mean(income_agg)
 s <- sd(income_agg)
-t <- qt(0.95, n-1)
+z <- qnorm(0.95)
 
-ME<- t * s/(n^(0.5))
+
+ME<-z*s/(n^(0.5))
 
 LCL = m - ME
 UCL = m + ME
 
-print("aggreate lever income conficence interval at 90% confidence")
-m
-LCL
-UCL
+cat("Aggreate lever income conficence interval at 90% confidence")
+cat(m)
+cat(LCL)
+cat(UCL)
+
+t<-cbind(ME,LCL,UCL)
+colnames(t)<-c("ME", "LCL", "UCL")
+
+
+kable(t,
+      caption="Confidence Interval with Significance Level of 90% for Aggregate Level of Income",
+      format="simple")
+
+tTest <- t.test(t)
+tTest
 
 # to get the data from the segmented levels  and male / female look at how we did it in A.4.
 
+```
 
 
 
+```{r A.2.1 References, comment= " "}
+
+# references
+travelersdata = data[data$Segment == "Travelers",]
+urban_hipdata = data[data$Segment == "Urban hip",]
+suburb_mixdata = data[data$Segment == "Suburb mix",]
+
+
+# definitions for income
+travelersdata_income <- travelersdata$income
+urban_hipdata_income <- urban_hipdata$income
+suburb_mixdata_income <- suburb_mixdata$income
+
+# getting the sample sizes
+nx = nrow(travelersdata)
+ny = nrow(urban_hipdata)
+
+# data for travelers
+mx <- mean(travelersdata$income)
+sx <- sd(travelersdata$income)
+
+# data for urban
+my <- mean(urban_hipdata$income)
+sy <- sd(urban_hipdata$income)
+
+ME<- z * s/(n^(0.5))
+
+LCL = m - ME
+UCL = m + ME
+
+cat("Aggregate lever income conficence interval at 90% confidence")
+cat(m)
+cat(LCL)
+cat(UCL)
 
 ```
 
+
+
 [your comments here]
 
-```{r A.2.2}
+```{r A.2.2, comment= " "}
 
 # In this part we are dealing with a true/false variable subsribers (a bool variable either subNo or subYes)
 # we want to transform this to numbers so subYes becomes 1 and subNo becomes 0
