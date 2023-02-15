@@ -171,13 +171,16 @@ travelersdata = data[data$Segment == "Travelers",]
 urban_hipdata = data[data$Segment == "Urban hip",]
 suburb_mixdata = data[data$Segment == "Suburb mix",]
 movingUpData <- data[data$Segment == "Moving up",]
-
+maleData <- data[data$gender == "Male",]
+femaleData <- data[data$gender == "Female",]
 
 # definitions for income
 travelersdata_income <- travelersdata$income
 urban_hipdata_income <- urban_hipdata$income
 suburb_mixdata_income <- suburb_mixdata$income
 movingUpData_income <- movingUpData$income
+maleData_income <- maleData$income
+femaleData_income <- femaleData$income
 
 income_agg <- data$income
 n <- length(income_agg)
@@ -242,6 +245,9 @@ meM<-z*su/(nu^(0.5))
 lclM = mu - meM
 uclM = mu + meM
 
+
+
+
 # to get the data from the segmented levels  and male / female look at how we did it in A.4.
 
 ```
@@ -250,34 +256,37 @@ uclM = mu + meM
 
 ```{r A.2.1 References, comment= " "}
 
-
 tTestAgg <- t.test(income_agg, conf.level = 0.90)
 tTestTra <- t.test(travelersdata_income, conf.level = 0.90)
 tTestUrb <- t.test(urban_hipdata_income, conf.level = 0.90)
 tTestSub <- t.test(suburb_mixdata_income, conf.level = 0.90)
 tTestMov <- t.test(movingUpData_income, conf.level = 0.90)
+tTestMal <- t.test(maleData_income,conf.level = 0.90)
+tTestFem <- t.test(femaleData_income, conf.level = 0.90)
 
-finaltTest <- map_df(list(tTestAgg,tTestTra,tTestUrb,tTestSub,tTestMov), tidy)
+finaltTest <- map_df(list(tTestAgg,tTestTra,tTestUrb,tTestSub,tTestMov, tTestMal, tTestFem), tidy)
 
 finaltTest[,c("method","alternative")] <- NULL
 
 
-finaltTest <- cbind(c("Aggregate","Travellers","Urban Hip","Suburb Mix","Moving Up"),
-finaltTest)
+finaltTest <- cbind(c("Aggregate","Travellers","Urban Hip","Suburb Mix","Moving Up", "Male", "Female"), finaltTest)
 colnames(finaltTest) <- c("Segments","Estimate","Statistic","P.Value", "DF","Conf.Low","Conf.High")
 
 kable(finaltTest,
-      caption = "T-test table for Income, both Aggregate and Segmented. Gives a 90% C.I for the population mean",format="simple")
+      caption = "T-test table for Income, both Aggregate and Segmented. Gives a 90% C.I for the population mean",
+      format="simple",
+      )
 
 
+#mention that p-value is 0 because it is rounded by the table. It isnt actually 0
 
 ```
 
-
+# A.2.2
 
 [your comments here]
 
-```{r A.2.2, comment= " "}
+```{r A.2.2, comment= " ",fig.dim = c(3,3)}
 
 # In this part we are dealing with a true/false variable subsribers (a bool variable either subNo or subYes)
 # we want to transform this to numbers so subYes becomes 1 and subNo becomes 0
@@ -286,13 +295,50 @@ kable(finaltTest,
 
 
 n = nrow(data) 
-p = sum(data$subscribe == "subYes")/n
+totalP = sum(data$subscribe == "subYes")/n
+
+totalTTestP <- t.test(data$subscribe =="subYes", conf.level = 0.90)
+
+muN <- nrow(seg_mu)
+muP <- sum(seg_mu$subscribe == "subYes")/muN
+
+smN <- nrow(seg_sm)
+smP <- sum(seg_sm$subscribe == "subYes") / smN
+
+tN <- nrow(seg_t)
+tP <- sum(seg_t$subscribe == "subYes")/tN
+
+uhN <- nrow(seg_uh)
+uhP <- sum(seg_uh$subscribe == "subYes") /uhN
+
+proportionC <- rbind(totalP,muP,smP,tP,uhP)
+rownames(proportionC) <- c("Aggregate", "Moving Up", "Suburb Mix", "Travelers", "Urban Hip")
+
+kable(proportionC,
+      caption = "Aggregate Proportion and Proportion per Segment",
+      col.names = "Proportion",
+      format ="simple",
+       )
 
 #then look at p 284 in Newbold to figure out the confidence interval 
 
+```
+
+```{r A.2.2 C.I, comment = " ", fig.dim = c(3,3)}
 
 
+uhTTestP <- t.test(seg_uh$subscribe == "subYes", conf.level = 0.90)
 
+pTable <- map_df(list(totalTTestP,uhTTestP),tidy)
+pTable[,c("method","alternative")] <- NULL
+
+pTable <- cbind(c("Aggregate","Urban Hip"),pTable)
+colnames(pTable) <- c("Segments","Estimate","Statistic","P.Value", "DF","Conf.Low","Conf.High")
+
+kable(pTable,
+      caption ="90% C.I for the population proportion of Subscribers, both Aggregate and for Urban Hip",
+        format="simple",
+      )
 
 ```
 
