@@ -269,8 +269,14 @@ finaltTest <- map_df(list(tTestAgg,tTestTra,tTestUrb,tTestSub,tTestMov, tTestMal
 finaltTest[,c("method","alternative")] <- NULL
 
 
+
 finaltTest <- cbind(c("Aggregate","Travellers","Urban Hip","Suburb Mix","Moving Up", "Male", "Female"), finaltTest)
 colnames(finaltTest) <- c("Segments","Estimate","Statistic","P.Value", "DF","Conf.Low","Conf.High")
+
+meTTest <- c(finaltTest[,"Conf.High"]-finaltTest[,"Estimate"])
+
+finaltTest <- cbind(finaltTest,meTTest)
+colnames(finaltTest) <- c("Segments","Estimate","Statistic","P.Value", "DF","Conf.Low","Conf.High","ME")
 
 kable(finaltTest,
       caption = "T-test table for Income, both Aggregate and Segmented. Gives a 90% C.I for the population mean",
@@ -334,6 +340,11 @@ pTable[,c("method","alternative")] <- NULL
 
 pTable <- cbind(c("Aggregate","Urban Hip"),pTable)
 colnames(pTable) <- c("Segments","Estimate","Statistic","P.Value", "DF","Conf.Low","Conf.High")
+
+meTTestP <- c(pTable[,"Conf.High"] - pTable[,"Estimate"] )
+
+pTable <- cbind(pTable,meTTestP)
+colnames(pTable) <- c("Segments","Estimate","Statistic","P.Value", "DF","Conf.Low","Conf.High", "ME")
 
 kable(pTable,
       caption ="90% C.I for the population proportion of Subscribers, both Aggregate and for Urban Hip",
@@ -409,6 +420,10 @@ propTestTable[,c("method","alternative")] <- NULL
 
 propTestTable <- cbind("Aggregate",propTestTable)
 colnames(propTestTable) <- c("Segments","Estimate","Statistic","P.Value", "DF","Conf.Low","Conf.High")
+
+propMETTest <- c(propTestTable[,"Conf.High"] - propTestTable[,"Estimate"])
+propTestTable <- cbind(propTestTable, propMETTest)
+colnames(propTestTable) <- c("Segments","Estimate","Statistic","P.Value", "DF","Conf.Low","Conf.High", "ME")
 
 kable(propTestTable,
       caption = "90% C.I for population proportion of Subscrbers with 10000 samples",
