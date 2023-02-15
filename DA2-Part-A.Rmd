@@ -80,10 +80,10 @@ kable_styling(latex_options = "hold_position")
 |   The income has a very large range, from roughly $11000$ to $139000$. The median, $53000$ and mean, $52000$ are closer to the minimum than the maximum meaning the data is skewed towards the lower values. The 3rd quartile is also very close to the median/mean meaning that there are some potential extreme values.
 |   The kids are also skewed towards lower values. The range goes from $0$ to $7$ but the mean is $1.32$ while the median is $1$. This all gives us an accurate picture of the distribution of the data.
 |
-|   On the other hand, there is a relatively even proportion between two of the categorical variables, excluding the subscribers. While there is roughly $4$ percent difference between males and females, they are both around $50%$. The same applies for people owning homes. However, the proportion of subscribers is not distributed evenly as more than $85%$ of the sample does not subscribe. While this tells that the majority do not subscribe and that the sample has an even proportion of categories, this does not give us specific categorical values, for example, whether more Females or Males subscribe.
+|   On the other hand, there is a relatively even proportion between two of the categorical variables, excluding the subscribers. For example, While there is roughly $4$ percent difference between males and females, they are both around $50%$. However, the proportion of subscribers is not distributed evenly as more than $85%$ of the sample does not subscribe. While this tells that the majority do not subscribe and that the sample has an even proportion of categories, this does not give us specific categorical values, for example, whether more Females or Males subscribe.
 
 
-```{r A.1.2 Age histogram, fig.dim = c(4,4)}
+```{r A.1.2 Age histogram, fig.dim = c(4,4), fig.align='center'}
 
 d1 <- data$age
 d2 <- data$income
@@ -92,24 +92,24 @@ d3 <- data$kids
 hist(d1, breaks=50, main = "Histogram of Age", xlab= "Aggregate age")
 ```
 
-|   The histogram is very centered around the mean while the median is a bit greater than where the majority lie. Additionally, there seems to be an observation above all the other ones at $77$ so it could potentially be an outlier. The distribution could have been normally distributed but when increasing the number of breaks, it was revealed that there are almost two modes. However, it is still possible to approximate this distribution to a normal one. 
+|   The histogram is very centered around the mean while the median is a bit greater than where the mode is. Additionally, there seems to be an observation at $77$ which it could potentially be an outlier.  
 
 
-```{r A.1.2 Income histogram, fig.dim = c(4,4)}
+```{r A.1.2 Income histogram, fig.dim = c(4,4), fig.align='center'}
 hist(d2, breaks=100, main = "Histogram of Income", xlab= "Aggregate income")
 ```
 
-|   The income histogram is also centered around its mean and median. There is an observation at roughly $139000$ which is definitely an outlier in this case. Excluding the outlier, the above sample can be approximated to a normal distribution. However, there is a small peak around $20000$ which might contradict that approximation.
+|   The income histogram is also centered around its mean and median. There is an observation at roughly $139000$ which is definitely an outlier in this case. 
 
 
-```{r A.1.2 Kids histogram, fig.dim = c(4,4)}
+```{r A.1.2 Kids histogram, fig.dim = c(4,4), fig.align='center'}
 hist(d3, breaks=30, main = "Histogram of Kids", xlab= "Aggregate kids")
 
 ```
 
 |   The histogram of Kids is centered around the minimum rather than median or the mean and this could be because of the outlier at $7$. The median in this case is more central than the mean as a result of this outlier. 
 
-```{r A.1.2 Aggregate Boxplot, fig.dim = c(4,4)}
+```{r A.1.2 Aggregate Boxplot, fig.dim = c(4,4), fig.align='center'}
 
 #Aggregate income boxplot
 boxplot(d2,
@@ -123,7 +123,7 @@ boxplot(d2,
 |   The Aggregate Income boxplots supports the claims made from the histogram. While there is quite a even distribution centered around the median, there is an extreme value at around $139000$. The quartiles, and the maximum and minimum are also more or less evenly distributed. 
 
 
-```{r A.1.2 Segmented Boxplot, fig.dim = c(4,4)}
+```{r A.1.2 Segmented Boxplot, fig.dim = c(4,4), fig.align='center'}
 #Segmented income boxplot
 seg_sm<-data[data$Segment=="Suburb mix",]
 seg_uh<-data[data$Segment=="Urban hip",]
@@ -154,12 +154,9 @@ boxplot(data$income~data$Segment,
 ```
 
 |   
-|   Do the variables Income and Age appear to be (approximately) normally distributed? 
+|   Do the variables Income and Age appear to be (approximately) normally distributed? Can you think of a suitable distribution for the variable children? 
 |
 |   The Income and Age variables appear to be approximately normally distributed, even if there appears to be two modes in the Age variable, as mentioned above. 
-
-|
-|   Can you think of a suitable distribution for the variable children? 
 |
 |   The Children variable is not approximately normally distributed as it appears rather like a Chi-squared distribution. The distribution is very skewed to the right, with the mode furthest to the left. 
 
@@ -167,33 +164,6 @@ boxplot(data$income~data$Segment,
 ## A.2 - Confidence Intervals
 
 ```{r A.2.1, comment= " "}
-
-
-#aggregate income
-income_agg <- data$income
-n <- length(income_agg)
-m <- mean(income_agg)
-s <- sd(income_agg)
-z <- qnorm(0.95)
-
-
-ME<-z*s/(n^(0.5))
-
-LCL = m - ME
-UCL = m + ME
-
-cat("Aggreate lever income conficence interval at 90% confidence")
-cat(m)
-cat(LCL)
-cat(UCL)
-
-# to get the data from the segmented levels  and male / female look at how we did it in A.4.
-
-```
-
-
-
-```{r A.2.1 References, comment= " "}
 
 
 # references
@@ -213,7 +183,7 @@ income_agg <- data$income
 n <- length(income_agg)
 m <- mean(income_agg)
 s <- sd(income_agg)
-z <- qnorm(0.95)
+z <- qt(0.95, n-1)
 
 ME<-z*s/(n^(0.5))
 
@@ -224,31 +194,31 @@ UCL = m + ME
 t <- c(ME,LCL,UCL)
 
 # getting the sample sizes
-nx = nrow(travelersdata)
+nx = length(travelersdata_income)
 ny = nrow(urban_hipdata)
 nz = nrow(suburb_mixdata)
 nu = nrow(movingUpData)
 
 # data for travelers
-mx <- mean(travelersdata$income)
-sx <- sd(travelersdata$income)
+mx <- mean(travelersdata_income)
+sx <- sd(travelersdata_income)
 
 # data for urban
-my <- mean(urban_hipdata$income)
-sy <- sd(urban_hipdata$income)
+my <- mean(urban_hipdata_income)
+sy <- sd(urban_hipdata_income)
 
 # data for suburbMix
-mz <- mean(suburb_mixdata$income)
-sz <- sd(suburb_mixdata$income)
+mz <- mean(suburb_mixdata_income)
+sz <- sd(suburb_mixdata_income)
 
 # data for MovingUp
-mu <- mean(movingUpData$income)
-su <- sd(movingUpData$income)
+mu <- mean(movingUpData_income)
+su <- sd(movingUpData_income)
 
 meT<-z*sx/(nx^(0.5))
 
-lclT = mx - meT
-uclT = mx + meT
+lclT <- mx - meT
+uclT <- mx + meT
 
 tT <- cbind(meT,lclT,uclT)
 
@@ -272,22 +242,20 @@ meM<-z*su/(nu^(0.5))
 lclM = mu - meM
 uclM = mu + meM
 
-tM <- cbind(meM,lclM,uclM)
+# to get the data from the segmented levels  and male / female look at how we did it in A.4.
 
-ciData <- rbind(t,tT,tU,tS,tM)
-colnames(ciData) <- c("ME","LCL","UCL")
-rownames(ciData) <- c("Aggregate","Travellers","Urban Hip","Suburb Mix","Moving Up")
+```
 
-kable(ciData,
-      caption="90% C.I for Income, both Aggregate and Segmented",
-      format="simple",
-      digits=2)
 
-tTestAgg <- t.test(t)
-tTestTra <- t.test(tT)
-tTestUrb <- t.test(tU)
-tTestSub <- t.test(tS)
-tTestMov <- t.test(tM)
+
+```{r A.2.1 References, comment= " "}
+
+
+tTestAgg <- t.test(income_agg, conf.level = 0.90)
+tTestTra <- t.test(travelersdata_income, conf.level = 0.90)
+tTestUrb <- t.test(urban_hipdata_income, conf.level = 0.90)
+tTestSub <- t.test(suburb_mixdata_income, conf.level = 0.90)
+tTestMov <- t.test(movingUpData_income, conf.level = 0.90)
 
 finaltTest <- map_df(list(tTestAgg,tTestTra,tTestUrb,tTestSub,tTestMov), tidy)
 
@@ -296,11 +264,10 @@ finaltTest[,c("method","alternative")] <- NULL
 
 finaltTest <- cbind(c("Aggregate","Travellers","Urban Hip","Suburb Mix","Moving Up"),
 finaltTest)
-colnames(finaltTest) <- c("Segments","Estimate","Statistic","P.Value", "Parameter","Conf.Low","Conf.High")
-#rownames(finaltTest) <- c("Aggregate","Travellers","Urban Hip","Suburb Mix","Moving Up")
+colnames(finaltTest) <- c("Segments","Estimate","Statistic","P.Value", "DF","Conf.Low","Conf.High")
 
 kable(finaltTest,
-      caption = "T-test table for Income, both Aggregate and Segmented",format="simple", digits = 3)
+      caption = "T-test table for Income, both Aggregate and Segmented. Gives a 90% C.I for the population mean",format="simple")
 
 
 
