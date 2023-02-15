@@ -342,6 +342,7 @@ kable(pTable,
 
 ```
 
+# A.2.3
 [your comments here]
 
 ```{r A.2.3}
@@ -394,12 +395,25 @@ kable(table_3_1,
 |   It may not be worth the cost since the sample size would have to increase by a lot in order lower the ME only a little bit. In this case from 1691 to 6764 (around 4 times) in order to only decrease the ME from 2% to 1%. 
 
 ```{r A.3.2, comment = " "}
-ME<-0.01
-p<-0.5
 
-n<-(((qnorm(0.95,0,1))^2)*(p*(1-p))/(ME^2))
+lNP <- 10000
 
-cat(n)
+xP <- totalP * lNP
+
+propTest <- prop.test(xP,
+          lNP,
+          conf.level = 0.90)
+
+propTestTable <- map_df(list(propTest), tidy)
+propTestTable[,c("method","alternative")] <- NULL
+
+propTestTable <- cbind("Aggregate",propTestTable)
+colnames(propTestTable) <- c("Segments","Estimate","Statistic","P.Value", "DF","Conf.Low","Conf.High")
+
+kable(propTestTable,
+      caption = "90% C.I for population proportion of Subscrbers with 10000 samples",
+      format = "simple")
+
 ```
 
 
