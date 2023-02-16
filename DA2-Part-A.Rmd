@@ -245,7 +245,7 @@ uclM = mu + meM
 
 
 
-```{r A.2.1 References, comment= " "}
+```{r A.2.1 Aggregate Level, comment= " "}
 
 tTestAgg <- t.test(income_agg, conf.level = 0.90)
 tTestTra <- t.test(travelersdata_income, conf.level = 0.90)
@@ -255,29 +255,75 @@ tTestMov <- t.test(movingUpData_income, conf.level = 0.90)
 tTestMal <- t.test(maleData_income,conf.level = 0.90)
 tTestFem <- t.test(femaleData_income, conf.level = 0.90)
 
-finaltTest <- map_df(list(tTestAgg,tTestTra,tTestUrb,tTestSub,tTestMov, tTestMal, tTestFem), tidy)
+
+aggtTest <- map_df(list(tTestAgg),tidy)
+aggtTest[,c("method","alternative")] <- NULL
+aggtTest <- cbind("Aggregate",aggtTest)
+colnames(aggtTest) <- c("Segments","Estimate","Statistic","P.Value", "DF","LCL","UCL")
+
+MEtTestAgg <- c(aggtTest[,"UCL"]-aggtTest[,"Estimate"])
+aggtTest <- cbind(aggtTest,MEtTestAgg)
+colnames(aggtTest) <- c("","Estimate","Statistic","P.Value", "DF","LCL","UCL","ME")
+
+kable(aggtTest,
+      caption = "T-test table for Aggregate Income, at a 90% C.I for the population mean",
+      format="simple", digits = 2
+      )
+
+
+```
+
+```{r A.2.1 Segment, comment= " "}
+
+
+finaltTest <- map_df(list(tTestTra,tTestUrb,tTestSub,tTestMov), tidy)
+
+
 
 finaltTest[,c("method","alternative")] <- NULL
 
 
 
-finaltTest <- cbind(c("Aggregate","Travellers","Urban Hip","Suburb Mix","Moving Up", "Male", "Female"), finaltTest)
-colnames(finaltTest) <- c("Segments","Estimate","Statistic","P.Value", "DF","Conf.Low","Conf.High")
+finaltTest <- cbind(c("Travellers","Urban Hip","Suburb Mix","Moving Up"), finaltTest)
+colnames(finaltTest) <- c("Segments","Estimate","Statistic","P.Value", "DF","LCL","UCL")
 
-meTTest <- c(finaltTest[,"Conf.High"]-finaltTest[,"Estimate"])
+meTTest <- c(finaltTest[,"UCL"]-finaltTest[,"Estimate"])
 
 finaltTest <- cbind(finaltTest,meTTest)
-colnames(finaltTest) <- c("Segments","Estimate","Statistic","P.Value", "DF","Conf.Low","Conf.High","ME")
+colnames(finaltTest) <- c("Segments","Estimate","Statistic","P.Value", "DF","LCL","UCL","ME")
 
 kable(finaltTest,
-      caption = "T-test table for Income, both Aggregate and Segmented. Gives a 90% C.I for the population mean",
-      format="simple",
+      caption = "T-test table for Segmented Income, at a 90% C.I for the population mean",
+      format="simple", digits = 2
       )
 
 
 #mention that p-value is 0 because it is rounded by the table. It isnt actually 0
 
 ```
+
+```{r A.2.1 Gender, comment= " "}
+
+genderTTest <- map_df(list(tTestMal,tTestFem),tidy)
+
+genderTTest[,c("method","alternative")] <- NULL
+
+genderTTest <- cbind(c("Male", "Female"), genderTTest)
+colnames(genderTTest) <- c("Gender","Estimate","Statistic","P.Value", "DF","LCL","UCL")
+
+meTTest <- c(genderTTest[,"UCL"]-genderTTest[,"Estimate"])
+
+genderTTest <- cbind(genderTTest,meTTest)
+colnames(genderTTest) <- c("Gender","Estimate","Statistic","P.Value", "DF","LCL","UCL","ME")
+
+kable(genderTTest,
+      caption = "T-test table for Income by Gender, at a 90% C.I for the population mean",
+      format="simple", digits = 2
+      )
+```
+|   The population mean for income at an aggregate level has a confidence interval with a Lower Confidence Limit (LCL) of 49980.80 and Upper Confidence Limit (UCL) of 53821.89. The population mean lies within this interval with 90% confidence.
+
+
 
 # A.2.2
 
@@ -294,7 +340,11 @@ kable(finaltTest,
 n = nrow(data) 
 totalP = sum(data$subscribe == "subYes")/n
 
-totalTTestP <- t.test(data$subscribe =="subYes", conf.level = 0.90)
+totalTTestP <- map_df(list(t.test(data$subscribe =="subYes", conf.level = 0.90)),tidy)
+totalTTestP[,c("method","alternative")] <- NULL
+totalTTestP <- cbind("Subscribers",totalTTestP)
+
+colnames(pTable) <- c("","Estimate","Statistic","P.Value", "DF","LCL","UCL")
 
 muN <- nrow(seg_mu)
 muP <- sum(seg_mu$subscribe == "subYes")/muN
@@ -308,8 +358,19 @@ tP <- sum(seg_t$subscribe == "subYes")/tN
 uhN <- nrow(seg_uh)
 uhP <- sum(seg_uh$subscribe == "subYes") /uhN
 
-proportionC <- rbind(totalP,muP,smP,tP,uhP)
-rownames(proportionC) <- c("Aggregate", "Moving Up", "Suburb Mix", "Travelers", "Urban Hip")
+
+
+
+
+
+
+
+
+
+
+proportionC <- rbind(muP,smP,tP,uhP)
+rownames(proportionC) <- c("Moving Up", "Suburb Mix", "Travelers", "Urban Hip")
+
 
 kable(proportionC,
       caption = "Aggregate Proportion and Proportion per Segment",
