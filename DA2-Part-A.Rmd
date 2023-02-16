@@ -267,7 +267,7 @@ colnames(aggtTest) <- c("","Estimate","Statistic","P.Value", "DF","LCL","UCL","M
 
 kable(aggtTest,
       caption = "T-test table for Aggregate Income, at a 90% C.I for the population mean",
-      format="simple", digits = 2
+      format="simple", digits = 2,
       )
 
 
