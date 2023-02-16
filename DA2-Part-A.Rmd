@@ -83,33 +83,28 @@ kable_styling(latex_options = "hold_position")
 |   On the other hand, there is a relatively even proportion between two of the categorical variables, excluding the subscribers. For example, While there is roughly $4$ percent difference between males and females, they are both around $50%$. However, the proportion of subscribers is not distributed evenly as more than $85%$ of the sample does not subscribe. While this tells that the majority do not subscribe and that the sample has an even proportion of categories, this does not give us specific categorical values, for example, whether more Females or Males subscribe.
 
 
-```{r A.1.2 Age histogram, fig.dim = c(4,4), fig.align='center'}
+```{r A.1.2 Age histogram, fig.dim = c(3,3), fig.show="hold"}
 
 d1 <- data$age
 d2 <- data$income
 d3 <- data$kids
 
 hist(d1, breaks=50, main = "Histogram of Age", xlab= "Aggregate age")
-```
 
-|   The histogram is very centered around the mean while the median is a bit greater than where the mode is. Additionally, there seems to be an observation at $77$ which it could potentially be an outlier.  
-
-
-```{r A.1.2 Income histogram, fig.dim = c(4,4), fig.align='center'}
 hist(d2, breaks=100, main = "Histogram of Income", xlab= "Aggregate income")
 ```
 
-|   The income histogram is also centered around its mean and median. There is an observation at roughly $139000$ which is definitely an outlier in this case. 
-
-
-```{r A.1.2 Kids histogram, fig.dim = c(4,4), fig.align='center'}
+```{r A.1.2 Kids histogram, fig.dim = c(3,3), fig.show="hold"}
 hist(d3, breaks=30, main = "Histogram of Kids", xlab= "Aggregate kids")
-
 ```
 
+|   The histogram is very centered around the mean while the median is a bit greater than where the mode is. Additionally, there seems to be an observation at $77$ which it could potentially be an outlier.  
+|
+|   The income histogram is also centered around its mean and median. There is an observation at roughly $139000$ which is definitely an outlier in this case. 
+|
 |   The histogram of Kids is centered around the minimum rather than median or the mean and this could be because of the outlier at $7$. The median in this case is more central than the mean as a result of this outlier. 
 
-```{r A.1.2 Aggregate Boxplot, fig.dim = c(4,4), fig.align='center'}
+```{r A.1.2 Aggregate Boxplot, fig.dim = c(3,3)}
 
 #Aggregate income boxplot
 boxplot(d2,
@@ -118,12 +113,7 @@ boxplot(d2,
         ylab = "Age",
         horizontal = TRUE,
         las=1)
-```
 
-|   The Aggregate Income boxplots supports the claims made from the histogram. While there is quite a even distribution centered around the median, there is an extreme value at around $139000$. The quartiles, and the maximum and minimum are also more or less evenly distributed. 
-
-
-```{r A.1.2 Segmented Boxplot, fig.dim = c(4,4), fig.align='center'}
 #Segmented income boxplot
 seg_sm<-data[data$Segment=="Suburb mix",]
 seg_uh<-data[data$Segment=="Urban hip",]
@@ -141,9 +131,10 @@ boxplot(data$income~data$Segment,
         cex.axis = 0.7 # decrease the font label of the y axis
         )
 
-
 ```
 
+|   The Aggregate Income boxplots supports the claims made from the histogram. While there is quite a even distribution centered around the median, there is an extreme value at around $139000$. The quartiles, and the maximum and minimum are also more or less evenly distributed. 
+|
 |   As shown by the boxplot above, there is a significant difference between the data from different segments. For example, the median moving up income is around $20000$ while for Travelers it is $65000$. Urban hip and Suburb mix have a slightly lower median income at around $52000$ and $50000$ respectively. Furthermore, while the Travelers segment has a far outlier, it does not affect the median so the current boxplot is accurate.  
 |   Additionally, there is also a much lower minimum and maximum value for Moving Up compared to the rest. The Moving Up and Urban Hip segment is also not skewed compared to the other two. Travelers is slightly skewed towards the left while Suburban mix is skewed to the right. 
 
@@ -324,6 +315,7 @@ kable(proportionC,
       caption = "Aggregate Proportion and Proportion per Segment",
       col.names = "Proportion",
       format ="simple",
+      digits = 2
        )
 
 #then look at p 284 in Newbold to figure out the confidence interval 
