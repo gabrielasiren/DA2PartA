@@ -323,6 +323,7 @@ kable(genderTTest,
       )
 
 ```
+
 |   The population mean for income at an aggregate level has a confidence interval with a Lower Confidence Limit (LCL) of 49980.80 and Upper Confidence Limit (UCL) of 53821.89. The population mean lies within this interval with 90% confidence.
 
 | talk about segment
