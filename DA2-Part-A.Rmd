@@ -42,6 +42,7 @@ stats <- function(x){c("Mean " = mean(x)
                        ,"Maximum " = max(x))}
 summaryStatsTable <-sapply(c(data[1:1], data[3:4]),stats)
 
+rownames(summaryStatsTable) <- c("Mean", "Stan. Deviation", "Minimum", "Q1", "Median", "Q3", "Maximum")
 
 #number of rows in the data table
 rowD <- nrow(data)
@@ -91,7 +92,7 @@ d3 <- data$kids
 
 hist(d1, breaks=50, main = "Histogram of Age", xlab= "Aggregate age")
 
-hist(d2, breaks=100, main = "Histogram of Income", xlab= "Aggregate income")
+hist(d2, breaks=50, main = "Histogram of Income", xlab= "Aggregate income")
 ```
 
 ```{r A.1.2 Kids histogram, fig.dim = c(3,3), fig.show="hold"}
