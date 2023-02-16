@@ -334,7 +334,7 @@ kable(genderTTest,
 
 # A.2.2
 
-[your comments here]
+
 
 ```{r A.2.2, comment= " ",fig.dim = c(3,3)}
 
@@ -418,7 +418,7 @@ kable(pTable,
 ```
 
 # A.2.3
-[your comments here]
+
 
 ```{r A.2.3}
 
@@ -496,7 +496,7 @@ kable(propTestTable,
 ```
 
 
-[your comments here]
+
 
 
 How should we adjust the confidence level as the size of the sample increases? Why?
