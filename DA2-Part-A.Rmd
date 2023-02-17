@@ -111,9 +111,11 @@ hist(d3, breaks=30, main = "Histogram of Kids", xlab= "Aggregate kids")
 boxplot(d2,
         main = "Aggregate Income boxplot",
         xlab = "Income",
-        ylab = "Age",
+        ylab = "",
         horizontal = TRUE,
-        las=1)
+        las=1,
+        cex.main = 0.9
+        )
 
 #Segmented income boxplot
 seg_sm<-data[data$Segment=="Suburb mix",]
@@ -129,7 +131,8 @@ boxplot(data$income~data$Segment,
         horizontal = TRUE,
         ylab = "",
         xlab = "Income",
-        cex.axis = 0.7 # decrease the font label of the y axis
+        cex.axis = 0.7,# decrease the font label of the y axis
+        cex.main = 0.9
         )
 
 ```
