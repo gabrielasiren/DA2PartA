@@ -387,9 +387,22 @@ proportionC <- rbind(muP,smP,tP,uhP)
 rownames(proportionC) <- c("Moving Up", "Suburb Mix", "Travelers", "Urban Hip")
 
 
-kable(proportionC,
-      caption = "Proportion per Segment",
-      col.names = "Proportion",
+tPropT <- t.test(seg_t$subscribe == "subYes", conf.level = 0.90)
+tPropSM <- t.test(seg_sm$subscribe == "subYes", conf.level = 0.90)
+tPropMU <- t.test(seg_mu$subscribe == "subYes", conf.level = 0.90)
+tPropUH <- t.test(seg_uh$subscribe == "subYes", conf.level = 0.90)
+
+segPTest <- map_df(list(tPropT,tPropSM,tPropMU,tPropUH), tidy)
+segPTest[,c("statistic","p.value","parameter","method","alternative")] <- NULL
+
+tTestPME <- c(segPTest[,"conf.high"] - segPTest[,"estimate"])
+
+segPTest <- cbind(c("Travellers","Suburb Mix", "Moving Up", "Urban Hip"),segPTest,tTestPME)
+
+colnames(segPTest) <- c("Segment","Proportion","LCL","UCL", "ME")
+
+kable(segPTest,
+      caption = "Population Proportion per Segment with a 90% C.I",
       format ="simple",
       digits = 2
        )
