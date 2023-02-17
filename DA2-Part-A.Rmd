@@ -77,9 +77,7 @@ kables(
   ),caption =  "Summary table for all variables") %>%
 kable_styling(latex_options = "hold_position")
 ```
-|   As shown by Table 1, ages range between $17$ to $77$ with a median of $39$. The mean _Age_ is $40.74$ which is slightly larger than the median. Additionally, the majority of the ages are in between $33$ and $48.25$. 
-|   The _Income_ has a very large range, from roughly $11000$ to $139000$. The median, $53000$ and mean, $52000$ are closer to the minimum than the maximum meaning the data is skewed towards the lower values. The 3rd quartile is also very close to the median/mean meaning that there are some potential extreme values.
-|   The _Kids_ are also skewed towards lower values. The range goes from $0$ to $7$ but the mean is $1.32$ while the median is $1$. This all gives us an accurate picture of the distribution of the data.
+|   As shown by Table 1, ages range between $17$ to $77$ with a median of $39$. The mean _Age_ is $40.74$ which is slightly larger than the median. Additionally, the majority of the ages are in between $33$ and $48.25$. The _Income_ has a very large range, from roughly $11000$ to $139000$. The median, $53000$ and mean, $52000$ are closer to the minimum than the maximum meaning the data is skewed towards the lower values. The 3rd quartile is also very close to the median/mean meaning that there are some potential extreme values. The _Kids_ are also skewed towards lower values. The range goes from $0$ to $7$ but the mean is $1.32$ while the median is $1$. This all gives us an accurate picture of the distribution of the data.
 |
 |   On the other hand, there is a relatively even proportion between two of the categorical variables, excluding the _subscribers_. For example, while there is roughly $4$ percent difference between males and females, they are both around $50%$. However, the proportion of subscribers is not distributed evenly as more than $85%$ of the sample does not subscribe. While this tells that the majority do not subscribe and that the sample has an even proportion of categories, this does not give us specific categorical values, for example, whether more Females or Males subscribe.
 
