@@ -77,11 +77,11 @@ kables(
   ),caption =  "Summary table for all variables") %>%
 kable_styling(latex_options = "hold_position")
 ```
-|   As shown by Table 1, ages range between $17$ to $77$ with a median of $39$. The mean age is $40.74$ which is slightly larger than the median. Additionally, the majority of the ages are in between $33$ and $48.25$. 
-|   The income has a very large range, from roughly $11000$ to $139000$. The median, $53000$ and mean, $52000$ are closer to the minimum than the maximum meaning the data is skewed towards the lower values. The 3rd quartile is also very close to the median/mean meaning that there are some potential extreme values.
-|   The kids are also skewed towards lower values. The range goes from $0$ to $7$ but the mean is $1.32$ while the median is $1$. This all gives us an accurate picture of the distribution of the data.
+|   As shown by Table 1, ages range between $17$ to $77$ with a median of $39$. The mean _Age_ is $40.74$ which is slightly larger than the median. Additionally, the majority of the ages are in between $33$ and $48.25$. 
+|   The _Income_ has a very large range, from roughly $11000$ to $139000$. The median, $53000$ and mean, $52000$ are closer to the minimum than the maximum meaning the data is skewed towards the lower values. The 3rd quartile is also very close to the median/mean meaning that there are some potential extreme values.
+|   The _Kids_ are also skewed towards lower values. The range goes from $0$ to $7$ but the mean is $1.32$ while the median is $1$. This all gives us an accurate picture of the distribution of the data.
 |
-|   On the other hand, there is a relatively even proportion between two of the categorical variables, excluding the subscribers. For example, While there is roughly $4$ percent difference between males and females, they are both around $50%$. However, the proportion of subscribers is not distributed evenly as more than $85%$ of the sample does not subscribe. While this tells that the majority do not subscribe and that the sample has an even proportion of categories, this does not give us specific categorical values, for example, whether more Females or Males subscribe.
+|   On the other hand, there is a relatively even proportion between two of the categorical variables, excluding the _subscribers_. For example, while there is roughly $4$ percent difference between males and females, they are both around $50%$. However, the proportion of subscribers is not distributed evenly as more than $85%$ of the sample does not subscribe. While this tells that the majority do not subscribe and that the sample has an even proportion of categories, this does not give us specific categorical values, for example, whether more Females or Males subscribe.
 
 
 ```{r A.1.2 Age histogram, fig.dim = c(3,3), fig.show="hold"}
@@ -99,11 +99,7 @@ hist(d2, breaks=50, main = "Histogram of Income", xlab= "Aggregate income")
 hist(d3, breaks=30, main = "Histogram of Kids", xlab= "Aggregate kids")
 ```
 
-|   The histogram is very centered around the mean while the median is a bit greater than where the mode is. Additionally, there seems to be an observation at $77$ which it could potentially be an outlier.  
-|
-|   The income histogram is also centered around its mean and median. There is an observation at roughly $139000$ which is definitely an outlier in this case. 
-|
-|   The histogram of Kids is centered around the minimum rather than median or the mean and this could be because of the outlier at $7$. The median in this case is more central than the mean as a result of this outlier. 
+|   The _Age_ histogram is very centered around the mean while the median is a bit greater than where the mode is. Additionally, there seems to be an observation at $77$ which it could potentially be an outlier. On the other hand,the _Income_ histogram is also centered around its mean and median. There is an observation at roughly $139000$ which is definitely an outlier in this case. Finally, the histogram of _Kids_ is centered around the minimum rather than median or the mean and this could be because of the outlier at $7$. The median in this case is more central than the mean as a result of this outlier. 
 
 ```{r A.1.2 Aggregate Boxplot, fig.dim = c(3,3)}
 
@@ -137,23 +133,13 @@ boxplot(data$income~data$Segment,
 
 ```
 
-|   The Aggregate Income boxplots supports the claims made from the histogram. While there is quite a even distribution centered around the median, there is an extreme value at around $139000$. The quartiles, and the maximum and minimum are also more or less evenly distributed. 
+|   The _Aggregate Income_ boxplots supports the claims made from the histogram. While there is quite a even distribution centered around the median, there is an extreme value at around $139000$. The quartiles, and the maximum and minimum are also more or less evenly distributed. 
+|   As shown by the _Segmented Income_ boxplot, there is a difference between the segments. For example, the median _Moving up Income_ is around $20000$ while for _Travelers_ it is $65000$. Secondly, the _Travelers_ and _Moving Up_ segment have outliers.  
+|   Additionally, there is also a much lower minimum and maximum value for Moving Up compared to the rest. The _Moving Up_ and _Urban Hip_ segment is also not skewed compared to the other two. Travelers is slightly skewed towards the left while Suburban mix is skewed to the right. 
+
+|   Do the variables _Income_ and _Age_ appear to be (approximately) normally distributed? Can you think of a suitable distribution for the variable children? 
 |
-|   As shown by the boxplot above, there is a significant difference between the data from different segments. For example, the median moving up income is around $20000$ while for Travelers it is $65000$. Urban hip and Suburb mix have a slightly lower median income at around $52000$ and $50000$ respectively. Furthermore, while the Travelers segment has a far outlier, it does not affect the median so the current boxplot is accurate.  
-|   Additionally, there is also a much lower minimum and maximum value for Moving Up compared to the rest. The Moving Up and Urban Hip segment is also not skewed compared to the other two. Travelers is slightly skewed towards the left while Suburban mix is skewed to the right. 
-
-
-
-```{r A.1.3}
-
-```
-
-|   
-|   Do the variables Income and Age appear to be (approximately) normally distributed? Can you think of a suitable distribution for the variable children? 
-|
-|   The Income and Age variables appear to be approximately normally distributed, even if there appears to be two modes in the Age variable, as mentioned above. 
-|
-|   The Children variable is not approximately normally distributed as it appears rather like a Chi-squared distribution. The distribution is very skewed to the right, with the mode furthest to the left. 
+|   The _Income_ and _Age_ variables appear to be approximately normally distributed, even if there appears to be two modes in the _Age_ variable, as mentioned above. With that said,the _Kids_ variable is not approximately normally distributed as it appears rather like a Chi-squared distribution. The distribution is very skewed to the right, with the mode furthest to the left. 
 
 
 ## A.2 - Confidence Intervals
@@ -262,7 +248,7 @@ tTestFem <- t.test(femaleData_income, conf.level = 0.90)
 
 aggtTest <- map_df(list(tTestAgg),tidy)
 aggtTest[,c("method","alternative")] <- NULL
-aggtTest <- cbind("Aggregate",aggtTest)
+aggtTest <- cbind("Income",aggtTest)
 colnames(aggtTest) <- c("Segments","Estimate","Statistic","P.Value", "DF","LCL","UCL")
 
 MEtTestAgg <- c(aggtTest[,"UCL"]-aggtTest[,"Estimate"])
@@ -328,12 +314,10 @@ kable(genderTTest,
 
 ```
 
-|   The population mean for income at an aggregate level has a confidence interval with a Lower Confidence Limit (LCL) of 49980.80 and Upper Confidence Limit (UCL) of 53821.89. The population mean lies within this interval with 90% confidence.
-
-| talk about segment
-
-| talk about gender
-
+|   We are approximating the sample mean to normal distribution according to the Central Limit Theorem. They are random independent samples, of a size of n $\ge$ 30.
+|   The population mean for _Income_ at an aggregate level has a confidence interval with a Lower Confidence Limit (LCL) of 49980.80 and Upper Confidence Limit (UCL) of 53821.89. The population mean lies within this interval with 90% confidence.
+|   The population means of _Income_ for these segments lie in their respective confidence intervals that consist of a LCL and an UCL. The segment means lies in their respective intervals with 90% confidence. The _Travelers_ segment has the largest Margin of Error (ME), indicating that the segments mean has the widest spread. Also, since some of the segment confidence intervals overlap, there is no statistically significant difference in _Income_ between the segments. Therefore, the segments cannot be ranked relative to each other in terms of _Income_. In the marketing perspective, this implies that pricing for segments should not only be based on _Income_ but other factors, too.
+|   The segments means of _Income_ for males and females lie in their respective confidence intervals that consist of a LCL and UCL The segment means lies in their respective intervals with 90% confidence. According to the confidence intervals and this sample, men have less _Income_ than women. The ME is greater for men, however, so the _Income_ earned varies more for men; therefore, an estimate for the male segment would not necessarily be an accurate representation of real income earned by men. In the marketing perspective, this means that women are willing to pay more for the product, so, to maximize profit potential, Company XYZ should price the product higher for women. The sample data also indicates that the male segment should be sub-segmented further into more economically homogeneous groups such that the pricing strategy towards men is more accurate and effective.
 
 
 # A.2.2
@@ -428,20 +412,53 @@ pTable <- cbind(pTable,meTTestP)
 colnames(pTable) <- c("Segment","Estimate","Statistic","P.Value", "DF","LCL","UCL", "ME")
 
 kable(pTable,
-      caption ="90% C.I for the population proportion of Subscribers in the Urban Hip",
+      caption ="90% C.I for the population proportion of Subscribers in the Urban Hip Segment",
         format="simple", digits = 2
       )
 
 ```
 
+|   Table 5 shows that the aggregate level estimate shows that only about 13% of the population subscribes to the product, with a ME of $0.03$.  The population proportion of _Subscribers_ for the all segments lies in its confidence interval that consists of a Lower Confidence Limit (LCL) and an Upper Confidence Limit (UCL) with 90% confidence. According to Table 6, _Urban Hip_ has the highest population proportion of _Subscribers_. To maximize profit potential, the Company XYZ should target the Urban Hip segment with marketing strategies aimed at retaining customers in the long-run. To increase the aggregate level of subscription in the population, Company XYZ should execute email campaigns, advertisements, or perhaps a co-creative community to increase the general subscription rate to the product. 
+
+
 # A.2.3
 
 
 ```{r A.2.3}
+age <- data$age
+n <- length(age)
+s <- sd(age)
+
+# Set the significance level and degrees of freedom
+alpha = 0.10
+df = n-1  # degrees of freedom = sample size - 1
+
+# Calculate the critical values
+lower_crit = qchisq(alpha/2, df)
+upper_crit = qchisq(1 - (alpha/2), df)
+
+# Calculate the confidence interval
+n <- length(age)  # sample size
+s <- sd(age)   # sample standard deviation
+LCL = ((df * s^2 / upper_crit)^0.5)
+UCL = ((df * s^2 / lower_crit)^0.5)
+mePSD <- c(sd(age) - LCL) 
+
+
+CI <- ((df * s^2 / UCL)^0.5) 
+sigma <- ((df * s^2 / LCL)^0.5)
+
+# Print the confidence interval
+t<-cbind(s,LCL, UCL, mePSD)
+  colnames(t)<-c("Estimate","LCL", "UCL", "ME")
+  kable(t,caption = "95% Confidence Interval for Population Age Standard Deviation", 
+        format = "simple", digits = 2
+    
+        )
 
 ```
 
-Are the underlying assumptions for calculating this interval met in this data? 
+|   Yes, the underlying assumption, as this follows "Case 5: Confidence Intervals for $\sigma^2$ ", is that the data is normally distributed with mean $\mu$ and variance $\sigma^2$. $S^2$ is an estimator for $\sigma^2$, and exactly follows the Chi-Square distribution ($\chi^2$). The estimate is $12.84$ with a ME of ±$0.8$. This concludes a $90$% confidence interval for the population standard deviation from ($12.03;13.77$).
 
 ## A.3 - Confidence Intervals and the Sample Size
 
@@ -477,14 +494,14 @@ colnames_3_1<-c("2% ME","1% ME")
 kable(table_3_1,
       digits=2,
       col.names=colnames_3_1,
-      caption="Sample size to obtain a certain ME",
+      caption="Required sample size to obtain a certain ME",
       format="simple")
 
 
 
 ```
 
-|   It may not be worth the cost since the sample size would have to increase by a lot in order lower the ME only a little bit. In this case from 1691 to 6764 (around 4 times) in order to only decrease the ME from 2% to 1%. 
+|   It may not be worth since the sample size would have to increase considerably in order lower the ME only a little bit, in this case from $1691$ to $6764$ (around $4$ times) in order to only decrease the ME from $2$% to $1$%. 
 
 ```{r A.3.2, comment = " "}
 
@@ -513,11 +530,7 @@ kable(propTestTable,
 ```
 
 
-
-
-
-How should we adjust the confidence level as the size of the sample increases? Why?
-
+|   When the sample size increases, the estimation for the population proportion becomes more precise (the ME decreases). As the estimation becomes more precise, it would be possible to increase the confidence level and still get relatively low ME.
 
 
 ## A.4 - Confidence Intervals: Comparison of Population Means
